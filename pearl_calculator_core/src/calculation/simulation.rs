@@ -46,7 +46,10 @@ fn run_internal<M: PearlMovement + Clone>(
         .collect();
 
     let mut traces: LinkedList<Space3D> = LinkedList::new();
+    let mut motion_traces: LinkedList<Space3D> = LinkedList::new();
+
     traces.push_back(pearl.data.position);
+    motion_traces.push_back(pearl.data.motion);
 
     for tick in 0..max_ticks {
         for tnt in &mut tnt_entities {
@@ -58,6 +61,7 @@ fn run_internal<M: PearlMovement + Clone>(
         M::run_tick_sequence(&mut pearl, world_collisions);
 
         traces.push_back(pearl.data.position);
+        motion_traces.push_back(pearl.data.motion);
     }
 
     let final_landing_pos = pearl.data.position;
@@ -71,7 +75,10 @@ fn run_internal<M: PearlMovement + Clone>(
     };
 
     let mut final_traces: Vec<Space3D> = traces.into_iter().collect();
+    let mut final_motion_traces: Vec<Space3D> = motion_traces.into_iter().collect();
+
     final_traces.dedup();
+    final_motion_traces.dedup();
 
     let (final_landing_pos_with_offset, final_traces_with_offset) = match offset {
         Some(offset_vec) => {
@@ -88,6 +95,7 @@ fn run_internal<M: PearlMovement + Clone>(
     Some(CalculationResult {
         landing_position: final_landing_pos_with_offset,
         pearl_trace: final_traces_with_offset,
+        pearl_motion_trace: final_motion_traces,
         is_successful: is_success,
         tick: max_ticks,
         final_motion: pearl.data.motion,

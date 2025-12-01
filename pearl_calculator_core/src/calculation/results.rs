@@ -17,6 +17,7 @@ pub struct TNTResult {
 pub struct CalculationResult {
     pub landing_position: Space3D,
     pub pearl_trace: Vec<Space3D>,
+    pub pearl_motion_trace: Vec<Space3D>,
     pub is_successful: bool,
     pub tick: u32,
     pub final_motion: Space3D,
