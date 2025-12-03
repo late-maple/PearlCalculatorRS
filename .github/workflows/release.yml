@@ -69,20 +69,21 @@ jobs:
           tmp=$(mktemp)
           jq --arg v "$VERSION" '.version = $v' "$TAURI_CONF" > "$tmp" && mv "$tmp" "$TAURI_CONF"
 
-          update_cargo_toml() {
-            local file=$1
-            if [ -f "$file" ]; then
-              echo "Updating $file to version $VERSION"
-              sed "s/^version = .*/version = \"$VERSION\"/" "$file" > "$file.tmp" && mv "$file.tmp" "$file"
-            else
-              echo "$file not found"
-            fi
+          update_package_version() {
+          local file=$1
+          if [ -f "$file" ]; then
+          echo "Updating package version in $file..."
+          sed "s/^version = .*/version = \"$VERSION\"/" "$file" > "$file.tmp" && mv "$file.tmp" "$file"
+          fi
           }
 
-          update_cargo_toml "Cargo.toml"
-          update_cargo_toml "pearl_calculator_ui/src-tauri/Cargo.toml"
+          update_package_version "Cargo.toml"
+          update_package_version "pearl_calculator_ui/src-tauri/Cargo.toml"
+          update_package_version "pearl_calculator_core/Cargo.toml"
 
-          update_cargo_toml "pearl_calculator_core/Cargo.toml"
+          TARGET_CARGO="pearl_calculator_ui/src-tauri/Cargo.toml"
+
+          sed "s/^pearl_calculator_core = .*/pearl_calculator_core = { path = \"..\/..\/pearl_calculator_core\", version = \"$VERSION\" }/" "$TARGET_CARGO" > "$TARGET_CARGO.tmp" && mv "$TARGET_CARGO.tmp" "$TARGET_CARGO"
 
       - name: Generate Release Body
         shell: bash
