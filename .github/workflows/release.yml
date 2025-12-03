@@ -7,7 +7,7 @@ on:
 jobs:
   call-test-workflow:
     name: Run Tests
-    uses: ./.github/workflows/build & test.yml
+    uses: ./.github/workflows/test.yml
 
   publish-tauri:
     needs: call-test-workflow
