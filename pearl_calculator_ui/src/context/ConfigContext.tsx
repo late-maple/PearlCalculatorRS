@@ -43,7 +43,7 @@ export const emptyConfig: GeneralConfig = {
 const ConfigContext = createContext<ConfigContextType | undefined>(undefined);
 export function ConfigProvider({ children }: { children: ReactNode }) {
 	const [hasConfig, setHasConfig] = useState(false);
-	const [version, setVersion] = useState<PearlVersion>("Legacy");
+	const [version, setVersion] = useState<PearlVersion>("Post1212");
 	const [configData, setConfigData] = useState<GeneralConfig>(defaultConfig);
 	const [configPath, setConfigPath] = useState("");
 

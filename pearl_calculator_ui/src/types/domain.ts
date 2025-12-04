@@ -1,4 +1,4 @@
-export type PearlVersion = "Legacy" | "Post1212";
+export type PearlVersion = "Legacy" | "Post1205" | "Post1212";
 
 export interface TNTResult {
 	distance: number;

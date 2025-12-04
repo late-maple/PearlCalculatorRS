@@ -40,8 +40,12 @@ const items = [
 ];
 const versions: { name: string; value: PearlVersion }[] = [
 	{
-		name: "1.21.2 & Older",
+		name: "1.20.4 & Older",
 		value: "Legacy",
+	},
+	{
+		name: "1.20.5 - 1.21.1",
+		value: "Post1205",
 	},
 	{
 		name: "1.21.2+",

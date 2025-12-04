@@ -6,7 +6,7 @@ use crate::physics::constants::constants::{
     TNT_EXPLOSION_RADIUS,
 };
 use crate::physics::entities::movement::{
-    MovementLegacy, MovementPost1212, PearlMovement, PearlVersion,
+    MovementLegacy, MovementPost1205, MovementPost1212, PearlMovement, PearlVersion,
 };
 use crate::physics::entities::pearl_entities::PearlEntity;
 use crate::physics::entities::tnt_entities::TNTEntity;
@@ -24,6 +24,9 @@ pub fn run(
     match version {
         PearlVersion::Legacy => {
             run_internal::<MovementLegacy>(data, destination, max_ticks, world_collisions, offset)
+        }
+        PearlVersion::Post1205 => {
+            run_internal::<MovementPost1205>(data, destination, max_ticks, world_collisions, offset)
         }
         PearlVersion::Post1212 => {
             run_internal::<MovementPost1212>(data, destination, max_ticks, world_collisions, offset)

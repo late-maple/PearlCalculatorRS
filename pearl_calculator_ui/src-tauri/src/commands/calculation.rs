@@ -25,6 +25,7 @@ fn parse_layout_direction(s: &str) -> Option<LayoutDirection> {
 pub fn calculate_tnt_amount_command(input: CalculationInput) -> Result<serde_json::Value, String> {
     let version = match input.version.as_str() {
         "Legacy" => PearlVersion::Legacy,
+        "Post1205" => PearlVersion::Post1205,
         "Post1212" => PearlVersion::Post1212,
         _ => return Err("Invalid pearl version".to_string()),
     };
@@ -121,6 +122,7 @@ fn direction_from_layout(layout: LayoutDirection) -> Direction {
 pub fn calculate_pearl_trace_command(input: PearlTraceInput) -> Result<PearlTraceOutput, String> {
     let version = match input.version.as_str() {
         "Legacy" => PearlVersion::Legacy,
+        "Post1205" => PearlVersion::Post1205,
         "Post1212" => PearlVersion::Post1212,
         _ => return Err("Invalid pearl version".to_string()),
     };

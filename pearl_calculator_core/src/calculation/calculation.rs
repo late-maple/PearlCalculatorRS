@@ -43,7 +43,7 @@ pub fn calculate_tnt_amount(
     let mut divider = 0.0;
     for tick in 1..=max_ticks {
         let tick_exponent = match version {
-            PearlVersion::Legacy => tick - 1,
+            PearlVersion::Legacy | PearlVersion::Post1205 => tick - 1,
             PearlVersion::Post1212 => tick,
         };
         divider += PEARL_DRAG_MULTIPLIER.powi(tick_exponent as i32);

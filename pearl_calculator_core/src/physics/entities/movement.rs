@@ -1,10 +1,20 @@
 use crate::physics::aabb::aabb_box::AABBBox;
 use crate::physics::constants::constants::{PEARL_DRAG_MULTIPLIER, PEARL_GRAVITY_ACCELERATION};
 use crate::physics::entities::pearl_entities::PearlEntity;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum PearlVersion {
+    /// <= 1.20.4
+    /// Float, Move => Drag => Gravity
     Legacy,
+
+    /// 1.20.5 - 1.21.1
+    /// Double, Move => Drag => Gravity
+    Post1205,
+
+    /// >= 1.21.2
+    /// Double, Gravity => Drag => Move
     Post1212,
 }
 
@@ -16,6 +26,36 @@ pub trait PearlMovement {
 pub struct MovementLegacy;
 
 impl PearlMovement for MovementLegacy {
+    fn run_tick_sequence(pearl: &mut PearlEntity<Self>, world_collisions: &[AABBBox]) {
+        pearl.data.move_entity(
+            pearl.data.motion.x,
+            pearl.data.motion.y,
+            pearl.data.motion.z,
+            world_collisions,
+        );
+
+        let mut mx = pearl.data.motion.x as f32;
+        let mut my = pearl.data.motion.y as f32;
+        let mut mz = pearl.data.motion.z as f32;
+
+        mx *= PEARL_DRAG_MULTIPLIER as f32;
+        my *= PEARL_DRAG_MULTIPLIER as f32;
+        mz *= PEARL_DRAG_MULTIPLIER as f32;
+
+        if pearl.data.is_gravity {
+            my -= PEARL_GRAVITY_ACCELERATION as f32;
+        }
+
+        pearl.data.motion.x = mx as f64;
+        pearl.data.motion.y = my as f64;
+        pearl.data.motion.z = mz as f64;
+    }
+}
+
+#[derive(Debug, Clone, Copy)]
+pub struct MovementPost1205;
+
+impl PearlMovement for MovementPost1205 {
     fn run_tick_sequence(pearl: &mut PearlEntity<Self>, world_collisions: &[AABBBox]) {
         pearl.data.move_entity(
             pearl.data.motion.x,
