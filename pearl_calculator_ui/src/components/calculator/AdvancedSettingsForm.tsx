@@ -16,6 +16,20 @@ interface AdvancedSettingsFormProps {
 	onInputChange: (field: keyof CalculatorInputs, value: any) => void;
 }
 
+function sliderToTicks(val: number): number {
+	if (val <= 50) {
+		return val * 2;
+	}
+	return 100 * Math.pow(100, (val - 50) / 50);
+}
+
+function ticksToSlider(ticks: number): number {
+	if (ticks <= 100) {
+		return ticks / 2;
+	}
+	return 50 + 50 * (Math.log(ticks / 100) / Math.log(100));
+}
+
 export default function AdvancedSettingsForm({
 	inputs,
 	onInputChange,
@@ -55,18 +69,32 @@ export default function AdvancedSettingsForm({
 							<FieldLabel>{t("calculator.label_ticks_range")}</FieldLabel>
 							<div className="flex items-center gap-4">
 								<span className="text-sm text-muted-foreground w-8">0</span>
-								<Slider
-									value={inputs.tickRange}
-									onValueChange={(v) => onInputChange("tickRange", v)}
-									min={0}
-									max={100}
-									step={1}
-									className="flex-1"
-								/>
-								<span className="text-sm text-muted-foreground w-8">100</span>
+								<div className="relative flex-1 h-5 flex items-center">
+									<div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-1 h-1 rounded-full bg-foreground/50 z-0 pointer-events-none" />
+									<Slider
+										value={[
+											ticksToSlider(inputs.tickRange[0]),
+											ticksToSlider(inputs.tickRange[1]),
+										]}
+										onValueChange={(v) => {
+											const newRange = [
+												sliderToTicks(v[0]),
+												sliderToTicks(v[1]),
+											];
+											onInputChange("tickRange", newRange);
+										}}
+										min={0}
+										max={100}
+										step={0.1}
+										className="relative z-10"
+									/>
+								</div>
+								<span className="text-sm text-muted-foreground w-8">10000</span>
 							</div>
 							<p className="mt-1 text-center text-sm text-muted-foreground">
-								{inputs.tickRange[0]} - {inputs.tickRange[1]} {t("calculator.suffix_ticks")}
+								{Math.round(inputs.tickRange[0])} -{" "}
+								{Math.round(inputs.tickRange[1])}{" "}
+								{t("calculator.suffix_ticks")}
 							</p>
 						</Field>
 						<Field>

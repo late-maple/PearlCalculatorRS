@@ -14,7 +14,7 @@ interface RightPanelProps {
 
 export default function RightPanel({
 	results,
-	tickRange = [0, 1000],
+	tickRange = [0, 10000],
 	distanceRange = [0, 1000],
 	onTrace,
 }: RightPanelProps) {

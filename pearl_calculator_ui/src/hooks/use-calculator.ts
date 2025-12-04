@@ -87,7 +87,7 @@ export function useTNTCalculator() {
 				destinationX: destX,
 				destinationZ: destZ,
 				maxTnt: config.max_tnt,
-				maxTicks: 100,
+				maxTicks: 10000,
 				maxDistance: 50.0,
 				version: version,
 			};
