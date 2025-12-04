@@ -21,6 +21,8 @@ interface DirtyConfig {
 		Position?: { X: number; Y: number; Z: number };
 		Motion?: { X: number; Y: number; Z: number };
 	};
+
+	Offset?: { X: number; Z: number };
 }
 
 function normalizeConfig(dirty: DirtyConfig): GeneralConfig {
@@ -59,6 +61,9 @@ function normalizeConfig(dirty: DirtyConfig): GeneralConfig {
 
 		default_red_tnt_position: validateDirection(redDirRaw),
 		default_blue_tnt_position: validateDirection(blueDirRaw),
+
+		offset_x: Number(root.Offset?.X ?? 0),
+		offset_z: Number(root.Offset?.Z ?? 0),
 	};
 }
 

@@ -52,6 +52,8 @@ export interface GeneralConfig {
 		| "NorthWest"
 		| "SouthWest"
 		| "NorthEast";
+		offset_x?: number;
+		offset_z?: number;
 }
 
 export interface SimulatorConfig {

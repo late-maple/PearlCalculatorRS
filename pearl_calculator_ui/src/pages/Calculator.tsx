@@ -75,6 +75,14 @@ export default function Calculator() {
 					"cannonY",
 					Math.floor(result.config.pearl_y_position).toString(),
 				);
+				updateDefaultInput(
+					"offsetX",
+					(result.config.offset_x ?? 0).toString(),
+				);
+				updateDefaultInput(
+					"offsetZ",
+					(result.config.offset_z ?? 0).toString(),
+				);
 
 				showSuccess(t("calculator.toast_config_loaded"));
 			}
