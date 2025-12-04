@@ -19,7 +19,9 @@ pub enum PearlVersion {
 }
 
 pub trait PearlMovement {
-    fn run_tick_sequence(pearl: &mut PearlEntity<Self>, world_collisions: &[AABBBox]) where Self: Sized;
+    fn run_tick_sequence(pearl: &mut PearlEntity<Self>, world_collisions: &[AABBBox])
+    where
+        Self: Sized;
 }
 
 #[derive(Debug, Clone, Copy)]

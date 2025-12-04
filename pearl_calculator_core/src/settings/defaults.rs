@@ -24,7 +24,7 @@ impl Default for CannonSettings {
             pearl: PearlInfo {
                 motion: Space3D::default(),
                 position: Space3D::default(),
-            }
+            },
         }
     }
 }

@@ -184,7 +184,7 @@ pub fn calculate_pearl_trace_command(input: PearlTraceInput) -> Result<PearlTrac
         input.red_tnt,
         input.blue_tnt,
         flight_direction,
-        100,
+        10000,
         &[],
         version,
     )

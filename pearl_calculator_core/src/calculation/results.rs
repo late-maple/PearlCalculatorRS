@@ -1,5 +1,5 @@
-use crate::physics::world::space::Space3D;
 use crate::physics::world::direction::Direction;
+use crate::physics::world::space::Space3D;
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct TNTResult {
