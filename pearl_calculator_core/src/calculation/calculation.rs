@@ -6,6 +6,8 @@ use crate::physics::entities::movement::PearlVersion;
 use crate::physics::world::direction::Direction;
 use crate::physics::world::layout_direction::LayoutDirection;
 use crate::physics::world::space::Space3D;
+use rayon::prelude::*;
+use std::collections::HashMap;
 
 pub fn calculate_tnt_amount(
     cannon: &Cannon,
@@ -15,13 +17,11 @@ pub fn calculate_tnt_amount(
     max_distance: f64,
     version: PearlVersion,
 ) -> Vec<TNTResult> {
-    let mut results = Vec::new();
-
     let pearl_start_pos = cannon.pearl.position + cannon.pearl.offset;
     let true_distance = destination - pearl_start_pos;
 
     if true_distance.x == 0.0 && true_distance.z == 0.0 {
-        return results;
+        return Vec::new();
     }
 
     let flight_direction = Direction::from_angle(pearl_start_pos.angle_to_yaw(&destination));
@@ -33,73 +33,145 @@ pub fn calculate_tnt_amount(
 
     let denominator = red_tnt_vec.z * blue_tnt_vec.x - blue_tnt_vec.z * red_tnt_vec.x;
     if denominator.abs() < FLOAT_PRECISION_EPSILON {
-        return results;
+        return Vec::new();
     }
 
-    let true_red =
-        (true_distance.z * blue_tnt_vec.x - true_distance.x * blue_tnt_vec.z) / denominator;
-    let true_blue = (true_distance.x - true_red * red_tnt_vec.x) / blue_tnt_vec.x;
+    let mut groups: HashMap<(i32, i32), Vec<u32>> = HashMap::new();
 
-    let mut divider = 0.0;
+    let m = PEARL_DRAG_MULTIPLIER;
+    let denom_const = 1.0 - m;
+
     for tick in 1..=max_ticks {
-        let tick_exponent = match version {
-            PearlVersion::Legacy | PearlVersion::Post1205 => tick - 1,
-            PearlVersion::Post1212 => tick,
+        let numerator = 1.0 - m.powi(tick as i32);
+        let divider = match version {
+            PearlVersion::Legacy | PearlVersion::Post1205 => numerator / denom_const,
+            PearlVersion::Post1212 => m * numerator / denom_const,
         };
-        divider += PEARL_DRAG_MULTIPLIER.powi(tick_exponent as i32);
+
+        let true_red =
+            (true_distance.z * blue_tnt_vec.x - true_distance.x * blue_tnt_vec.z) / denominator;
+        let true_blue = (true_distance.x - true_red * red_tnt_vec.x) / blue_tnt_vec.x;
 
         let ideal_red = (true_red / divider).round() as i32;
         let ideal_blue = (true_blue / divider).round() as i32;
 
-        for r_adjust in -5..=5 {
-            for b_adjust in -5..=5 {
-                let current_red = ideal_red + r_adjust;
-                let current_blue = ideal_blue + b_adjust;
+        groups
+            .entry((ideal_red, ideal_blue))
+            .or_insert_with(Vec::new)
+            .push(tick);
+    }
 
-                if current_red < 0 || current_blue < 0 {
-                    continue;
-                }
-                if max_tnt > 0 && (current_red as u32 > max_tnt || current_blue as u32 > max_tnt) {
-                    continue;
-                }
+    let group_list: Vec<((i32, i32), Vec<u32>)> = groups.into_iter().collect();
+    let max_distance_sq = max_distance * max_distance;
+    let pearl_offset = cannon.pearl.offset;
+    let cannon_pearl_pos = cannon.pearl.position;
+    let cannon_pearl_motion = cannon.pearl.motion;
 
-                let data = GeneralData {
-                    pearl_position: cannon.pearl.position,
-                    pearl_motion: {
-                        let mut motion = cannon.pearl.motion;
-                        motion += red_tnt_vec * (current_red as f64);
-                        motion += blue_tnt_vec * (current_blue as f64);
-                        motion
-                    },
-                    tnt_charges: vec![],
-                };
+    let raw_results: Vec<TNTResult> = group_list
+        .into_par_iter()
+        .flat_map(|((ideal_red, ideal_blue), valid_ticks)| {
+            let mut local_results = Vec::new();
 
-                if let Some(sim_result) = simulation::run(
-                    &data,
-                    Some(destination),
-                    tick,
-                    &[],
-                    Some(cannon.pearl.offset),
-                    version,
-                ) {
-                    let landing_pos = sim_result.landing_position;
-                    if landing_pos.distance_2d(&destination) <= max_distance {
-                        results.push(TNTResult {
-                            distance: sim_result.distance,
-                            tick,
+            let max_sim_tick = *valid_ticks.iter().max().unwrap_or(&0);
+            if max_sim_tick == 0 {
+                return local_results;
+            }
+
+            let mut valid_ticks_map = vec![false; (max_sim_tick + 1) as usize];
+            for &t in &valid_ticks {
+                valid_ticks_map[t as usize] = true;
+            }
+
+            for r_adjust in -5..=5 {
+                for b_adjust in -5..=5 {
+                    let current_red = ideal_red + r_adjust;
+                    let current_blue = ideal_blue + b_adjust;
+
+                    if current_red < 0 || current_blue < 0 {
+                        continue;
+                    }
+                    if max_tnt > 0
+                        && (current_red as u32 > max_tnt || current_blue as u32 > max_tnt)
+                    {
+                        continue;
+                    }
+
+                    let data = GeneralData {
+                        pearl_position: cannon_pearl_pos,
+                        pearl_motion: {
+                            let mut motion = cannon_pearl_motion;
+                            motion += red_tnt_vec * (current_red as f64);
+                            motion += blue_tnt_vec * (current_blue as f64);
+                            motion
+                        },
+                        tnt_charges: vec![],
+                    };
+
+                    let hits = simulation::scan_trajectory(
+                        &data,
+                        destination,
+                        max_sim_tick,
+                        &valid_ticks_map,
+                        &[],
+                        pearl_offset,
+                        version,
+                        max_distance_sq,
+                    );
+
+                    if let Some(best_hit) = hits.into_iter().min_by(|a, b| {
+                        a.distance
+                            .partial_cmp(&b.distance)
+                            .unwrap_or(std::cmp::Ordering::Equal)
+                            .then_with(|| a.tick.cmp(&b.tick))
+                    }) {
+                        local_results.push(TNTResult {
+                            distance: best_hit.distance,
+                            tick: best_hit.tick,
                             blue: current_blue as u32,
                             red: current_red as u32,
                             total: (current_red + current_blue) as u32,
-                            pearl_end_pos: sim_result.landing_position,
-                            pearl_end_motion: sim_result.final_motion,
+                            pearl_end_pos: best_hit.position,
+                            pearl_end_motion: best_hit.motion,
                             direction: flight_direction,
                         });
                     }
                 }
             }
+            local_results
+        })
+        .collect();
+
+    let mut best_results_map: HashMap<(u32, u32), TNTResult> = HashMap::new();
+
+    for res in raw_results {
+        let key = (res.red, res.blue);
+        match best_results_map.entry(key) {
+            std::collections::hash_map::Entry::Vacant(e) => {
+                e.insert(res);
+            }
+            std::collections::hash_map::Entry::Occupied(mut e) => {
+                let current = e.get();
+                let is_better = if (res.distance - current.distance).abs() < FLOAT_PRECISION_EPSILON
+                {
+                    res.tick < current.tick
+                } else {
+                    res.distance < current.distance
+                };
+                if is_better {
+                    e.insert(res);
+                }
+            }
         }
     }
-    results
+
+    let mut final_results: Vec<TNTResult> = best_results_map.into_values().collect();
+    final_results.sort_by(|a, b| {
+        a.distance
+            .partial_cmp(&b.distance)
+            .unwrap_or(std::cmp::Ordering::Equal)
+    });
+
+    final_results
 }
 
 pub fn calculate_pearl_trace(
