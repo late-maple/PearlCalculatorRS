@@ -15,6 +15,7 @@ interface TNTInputGroupProps {
 	yOffset?: number;
 	xSign?: string;
 	zSign?: string;
+	inputIdX?: string;
 }
 
 export function TNTInputGroup({
@@ -29,6 +30,7 @@ export function TNTInputGroup({
 	yOffset = 0,
 	xSign,
 	zSign,
+	inputIdX,
 }: TNTInputGroupProps) {
 	const { t } = useTranslation();
 	let yValue: string | number = data.y;
@@ -90,6 +92,7 @@ export function TNTInputGroup({
 							</span>
 						)
 					}
+					id={inputIdX}
 				/>
 				<CompactInput
 					label={t("configuration_page.label_y")}

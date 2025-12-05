@@ -13,6 +13,7 @@ interface CompactInputProps {
 	labelClassName?: string;
 	error?: string;
 	suffix?: React.ReactNode;
+	id?: string;
 }
 
 export function CompactInput({
@@ -23,6 +24,7 @@ export function CompactInput({
 	labelClassName,
 	error,
 	suffix,
+	id,
 }: CompactInputProps) {
 	const [localValue, setLocalValue] = React.useState(value.toString());
 	const [isFocused, setIsFocused] = React.useState(false);
@@ -62,6 +64,7 @@ export function CompactInput({
 					onFocus={() => setIsFocused(true)}
 					onBlur={() => setIsFocused(false)}
 					placeholder={error}
+					id={id}
 				/>
 			</div>
 			{suffix && (

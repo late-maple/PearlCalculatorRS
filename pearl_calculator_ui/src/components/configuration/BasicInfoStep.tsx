@@ -13,9 +13,10 @@ import { useTranslation } from "react-i18next";
 
 interface BasicInfoStepProps {
 	errors: Record<string, string>;
+	onForceNext?: () => void;
 }
 
-export function BasicInfoStep({ errors }: BasicInfoStepProps) {
+export function BasicInfoStep({ errors, onForceNext }: BasicInfoStepProps) {
 	const {
 		draftConfig,
 		setDraftConfig,
@@ -213,6 +214,12 @@ export function BasicInfoStep({ errors }: BasicInfoStepProps) {
 								onChange={(e) =>
 									setDraftConfig({ ...draftConfig, max_tnt: e.target.value })
 								}
+								onKeyDown={(e) => {
+									if (e.key === "Tab" && !e.shiftKey) {
+										e.preventDefault();
+										onForceNext?.();
+									}
+								}}
 								placeholder={errors.max_tnt}
 								className={cn(
 									"h-7 text-xs font-mono px-2 py-0 shadow-none",

@@ -70,6 +70,7 @@ export function TNTConfigurationStep({ errors }: TNTConfigurationStepProps) {
 						hasError={!!errors.red_tnt_selection}
 						xSign="-"
 						zSign="-"
+						inputIdX="tnt-config-start-input"
 					/>
 					<TNTInputGroup
 						title={t("configuration_page.ne_tnt")}

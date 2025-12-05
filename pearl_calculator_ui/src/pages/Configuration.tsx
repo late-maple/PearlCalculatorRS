@@ -81,6 +81,16 @@ export default function Configuration() {
 
 	const progress = count > 0 ? (current / count) * 100 : 0;
 
+	const handleForceNext = () => {
+		if (validateStep(current)) {
+			api?.scrollNext();
+			setTimeout(() => {
+				const nextInput = document.getElementById("tnt-config-start-input");
+				nextInput?.focus();
+			}, 300);
+		}
+	};
+
 	if (!isConfiguring) {
 		return (
 			<OnboardingPanel
@@ -148,7 +158,10 @@ export default function Configuration() {
 						<CarouselContent className="h-full">
 							<CarouselItem className="h-full">
 								<ScrollArea className="h-full">
-									<BasicInfoStep errors={errors} />
+									<BasicInfoStep
+										errors={errors}
+										onForceNext={handleForceNext}
+									/>
 								</ScrollArea>
 							</CarouselItem>
 							<CarouselItem className="h-full">
