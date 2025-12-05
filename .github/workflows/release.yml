@@ -90,7 +90,16 @@ jobs:
         shell: bash
         run: |
           CURRENT_TAG=${GITHUB_REF#refs/tags/}
-          PREV_TAG=$(git describe --tags --abbrev=0 --exclude="$CURRENT_TAG" HEAD^ 2>/dev/null || echo "")
+          
+          echo "Current Tag: $CURRENT_TAG"
+
+          if [[ "$CURRENT_TAG" != *"-"* ]]; then
+            PREV_TAG=$(git describe --tags --abbrev=0 --exclude="*-*" HEAD^ 2>/dev/null || echo "")
+          else
+            PREV_TAG=$(git describe --tags --abbrev=0 --exclude="$CURRENT_TAG" HEAD^ 2>/dev/null || echo "")
+          fi
+
+          echo "Previous Version determined as: ${PREV_TAG:-'Initial Commit'}"
 
           if [ -z "$PREV_TAG" ]; then
             RANGE="HEAD"
