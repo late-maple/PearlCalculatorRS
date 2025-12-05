@@ -13,6 +13,8 @@ interface TNTInputGroupProps {
 	errors?: { x?: string; y?: string; z?: string };
 	hasError?: boolean;
 	yOffset?: number;
+	xSign?: string;
+	zSign?: string;
 }
 
 export function TNTInputGroup({
@@ -25,6 +27,8 @@ export function TNTInputGroup({
 	errors,
 	hasError,
 	yOffset = 0,
+	xSign,
+	zSign,
 }: TNTInputGroupProps) {
 	const { t } = useTranslation();
 	let yValue: string | number = data.y;
@@ -42,7 +46,7 @@ export function TNTInputGroup({
 	return (
 		<div
 			className={cn(
-				"space-y-1.5 w-[240px] bg-card p-3 rounded-lg border shadow-sm",
+				"space-y-1.5 w-[280px] bg-card p-3 rounded-lg border shadow-sm",
 				className,
 			)}
 		>
@@ -79,6 +83,13 @@ export function TNTInputGroup({
 					value={data.x}
 					onChange={(v) => onUpdate("x", v)}
 					error={errors?.x}
+					suffix={
+						xSign && (
+							<span className="text-xs font-mono text-muted-foreground w-full text-center">
+								({xSign})
+							</span>
+						)
+					}
 				/>
 				<CompactInput
 					label={t("configuration_page.label_y")}
@@ -97,6 +108,7 @@ export function TNTInputGroup({
 						}
 					}}
 					error={errors?.y}
+					suffix={<span />}
 				/>
 				<CompactInput
 					label={t("configuration_page.label_z")}
@@ -104,6 +116,13 @@ export function TNTInputGroup({
 					value={data.z}
 					onChange={(v) => onUpdate("z", v)}
 					error={errors?.z}
+					suffix={
+						zSign && (
+							<span className="text-xs font-mono text-muted-foreground w-full text-center">
+								({zSign})
+							</span>
+						)
+					}
 				/>
 			</div>
 		</div>

@@ -3,6 +3,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
+
+
 interface CompactInputProps {
 	label: string;
 	value: string | number;
@@ -10,6 +12,7 @@ interface CompactInputProps {
 	className?: string;
 	labelClassName?: string;
 	error?: string;
+	suffix?: React.ReactNode;
 }
 
 export function CompactInput({
@@ -19,6 +22,7 @@ export function CompactInput({
 	className,
 	labelClassName,
 	error,
+	suffix,
 }: CompactInputProps) {
 	const [localValue, setLocalValue] = React.useState(value.toString());
 	const [isFocused, setIsFocused] = React.useState(false);
@@ -51,7 +55,7 @@ export function CompactInput({
 					className={cn(
 						"h-7 text-xs font-mono px-2 py-0 shadow-none focus-visible:ring-1 flex-1 min-w-0",
 						error &&
-							"border-destructive focus-visible:ring-destructive placeholder:text-destructive/60",
+						"border-destructive focus-visible:ring-destructive placeholder:text-destructive/60",
 					)}
 					value={localValue}
 					onChange={(e) => handleChange(e.target.value)}
@@ -60,6 +64,11 @@ export function CompactInput({
 					placeholder={error}
 				/>
 			</div>
+			{suffix && (
+				<div className="flex items-center justify-center h-7 w-6 shrink-0">
+					{suffix}
+				</div>
+			)}
 		</div>
 	);
 }

@@ -68,6 +68,8 @@ export function TNTConfigurationStep({ errors }: TNTConfigurationStepProps) {
 							z: errors.north_west_tnt_z,
 						}}
 						hasError={!!errors.red_tnt_selection}
+						xSign="-"
+						zSign="-"
 					/>
 					<TNTInputGroup
 						title={t("configuration_page.ne_tnt")}
@@ -86,6 +88,8 @@ export function TNTConfigurationStep({ errors }: TNTConfigurationStepProps) {
 							z: errors.north_east_tnt_z,
 						}}
 						hasError={!!errors.red_tnt_selection}
+						xSign="+"
+						zSign="-"
 					/>
 					<TNTInputGroup
 						title={t("configuration_page.sw_tnt")}
@@ -104,6 +108,8 @@ export function TNTConfigurationStep({ errors }: TNTConfigurationStepProps) {
 							z: errors.south_west_tnt_z,
 						}}
 						hasError={!!errors.red_tnt_selection}
+						xSign="-"
+						zSign="+"
 					/>
 					<TNTInputGroup
 						title={t("configuration_page.se_tnt")}
@@ -122,6 +128,8 @@ export function TNTConfigurationStep({ errors }: TNTConfigurationStepProps) {
 							z: errors.south_east_tnt_z,
 						}}
 						hasError={!!errors.red_tnt_selection}
+						xSign="+"
+						zSign="+"
 					/>
 				</div>
 			</div>
