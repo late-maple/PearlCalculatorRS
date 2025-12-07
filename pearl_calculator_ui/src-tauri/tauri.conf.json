@@ -28,6 +28,8 @@
     "targets": [
       "nsis",
       "appimage",
+      "deb",
+      "dmg",
       "app"
     ],
     "copyright": "Copyright © 2025-Present MliroLirrorsIngenuity.",
