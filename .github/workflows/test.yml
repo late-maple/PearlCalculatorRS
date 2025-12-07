@@ -47,21 +47,32 @@ jobs:
           cache: 'pnpm'
           cache-dependency-path: '**/pnpm-lock.yaml'
 
-      - name: Install Frontend Dependencies
-        working-directory: pearl_calculator_ui
-        run: pnpm install
-
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
         with:
           targets: wasm32-unknown-unknown
 
+      - name: Install wasm-bindgen-cli
+        shell: bash
+        run: |
+          VERSION=$(cargo tree -p wasm-bindgen --depth 0 | head -n 1 | cut -d' ' -f2 | cut -c 2-)
+          cargo install wasm-bindgen-cli --version "$VERSION"
+
       - name: Rust Cache
         uses: Swatinem/rust-cache@v2
 
-      - name: Frontend Check (WASM + TS + Vite)
+      - name: Install Frontend Dependencies
         working-directory: pearl_calculator_ui
-        run: pnpm build
+        run: pnpm install
+
+      - name: Build WASM
+        run: |
+          cargo build -p pearl_calculator_wasm --target wasm32-unknown-unknown --release
+          wasm-bindgen target/wasm32-unknown-unknown/release/pearl_calculator_wasm.wasm --out-dir pearl_calculator_wasm/pkg --target bundler
+
+      - name: Frontend Build (TS + Vite)
+        working-directory: pearl_calculator_ui
+        run: pnpm exec tsc && pnpm exec vite build
 
       - name: Run tests
         run: cargo test --verbose

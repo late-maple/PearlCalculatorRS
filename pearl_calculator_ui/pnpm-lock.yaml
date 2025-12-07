@@ -89,9 +89,6 @@ importers:
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      pearl_calculator_wasm:
-        specifier: link:..\pearl_calculator_wasm\pkg
-        version: link:../pearl_calculator_wasm/pkg
       react:
         specifier: ^19.1.0
         version: 19.2.0

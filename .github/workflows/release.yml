@@ -79,13 +79,20 @@ jobs:
 
       - uses: dtolnay/rust-toolchain@stable
         with:
-          targets: ${{ matrix.target }}
+          targets: ${{ matrix.target }},wasm32-unknown-unknown
+
+      - name: Install wasm-bindgen-cli
+        shell: bash
+        run: |
+          VERSION=$(cargo tree -p wasm-bindgen --depth 0 | head -n 1 | cut -d' ' -f2 | cut -c 2-)
+          cargo install wasm-bindgen-cli --version "$VERSION"
 
       - uses: Swatinem/rust-cache@v2
         with:
             workspaces: |
               .
               pearl_calculator_ui/src-tauri
+
 
       - name: Sync Version from Tag
         shell: bash

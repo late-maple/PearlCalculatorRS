@@ -12,13 +12,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: wasm32-unknown-unknown
-
-      - name: Install wasm-bindgen-cli
-        run: cargo install wasm-bindgen-cli --version 0.2.106
-
       - uses: pnpm/action-setup@v3
         with:
           version: 9
@@ -42,9 +35,26 @@ jobs:
         working-directory: pearl_calculator_ui
         run: pnpm install
 
-      - name: Build WASM & Frontend
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Install wasm-bindgen-cli
+        shell: bash
+        run: |
+          VERSION=$(cargo tree -p wasm-bindgen --depth 0 | head -n 1 | cut -d' ' -f2 | cut -c 2-)
+          cargo install wasm-bindgen-cli --version "$VERSION"
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Build WASM
+        run: |
+          cargo build -p pearl_calculator_wasm --target wasm32-unknown-unknown --release
+          wasm-bindgen target/wasm32-unknown-unknown/release/pearl_calculator_wasm.wasm --out-dir pearl_calculator_wasm/pkg --target bundler
+
+      - name: Build Frontend (TS + Vite)
         working-directory: pearl_calculator_ui
-        run: pnpm build
+        run: pnpm exec tsc && pnpm exec vite build
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/pages-action@v1

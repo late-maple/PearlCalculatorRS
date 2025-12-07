@@ -12,6 +12,7 @@ export default defineConfig(async () => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "pearl_calculator_wasm": path.resolve(__dirname, "../pearl_calculator_wasm/pkg/pearl_calculator_wasm.js"),
     },
   },
 
