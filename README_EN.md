@@ -34,7 +34,10 @@
 
 ## Usage
 
-Go to the [Releases](https://github.com/MliroLirrorsIngenuity/PearlCalculatorRS/releases) page to download the latest version for your platform.
+Go to the [Releases](https://github.com/MliroLirrorsIngenuity/PearlCalculatorRS/releases) page to download the latest version for **your platform**.
+
+Alternatively, visit [pcrs.lolicon.best](https://pcrs.lolicon.best) to experience the installation-free WebAssembly (WASM) version.
+> **Note**: The WASM version operates in single-threaded mode, which may result in slightly reduced performance compared to the native application.
 
 ## Before Asking
 
