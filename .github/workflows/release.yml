@@ -18,15 +18,39 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-latest
-            args: ""
-          - os: macos-latest
-            args: ""
+          # Windows x64
           - os: windows-latest
+            platform_name: windows
+            arch_name: x86_64
+            target: x86_64-pc-windows-msvc
+            args: "" 
+          # Windows ARM64
+          - os: windows-latest
+            platform_name: windows
+            arch_name: aarch64
+            target: aarch64-pc-windows-msvc
+            args: "--target aarch64-pc-windows-msvc"
+          # macOS Intel
+          - os: macos-13 
+            platform_name: macos
+            arch_name: x86_64
+            target: x86_64-apple-darwin
+            args: "--target x86_64-apple-darwin"
+          # macOS Apple Silicon
+          - os: macos-latest
+            platform_name: macos
+            arch_name: aarch64
+            target: aarch64-apple-darwin
+            args: "--target aarch64-apple-darwin"
+          # Linux x64
+          - os: ubuntu-latest
+            platform_name: linux
+            arch_name: x86_64
+            target: x86_64-unknown-linux-gnu
             args: ""
 
     runs-on: ${{ matrix.os }}
-    name: Build & Release (${{ matrix.os }})
+    name: Release (${{ matrix.platform_name }}-${{ matrix.arch_name }})
 
     steps:
       - uses: actions/checkout@v4
@@ -54,7 +78,14 @@ jobs:
         run: pnpm install
 
       - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
       - uses: Swatinem/rust-cache@v2
+        with:
+            workspaces: |
+              .
+              pearl_calculator_ui/src-tauri
 
       - name: Sync Version from Tag
         shell: bash
@@ -70,27 +101,24 @@ jobs:
           tmp=$(mktemp)
           jq --arg v "$VERSION" '.version = $v' "$TAURI_CONF" > "$tmp" && mv "$tmp" "$TAURI_CONF"
 
-          update_package_version() {
-          local file=$1
-          if [ -f "$file" ]; then
-          echo "Updating package version in $file..."
-          sed "s/^version = .*/version = \"$VERSION\"/" "$file" > "$file.tmp" && mv "$file.tmp" "$file"
-          fi
-          }
+          sed "s/^version = .*/version = \"$VERSION\"/" "Cargo.toml" > "Cargo.toml.tmp" && mv "Cargo.toml.tmp" "Cargo.toml"
 
-          update_package_version "Cargo.toml"
-          update_package_version "pearl_calculator_ui/src-tauri/Cargo.toml"
-          update_package_version "pearl_calculator_core/Cargo.toml"
+          sed "s/^version = .*/version = \"$VERSION\"/" "pearl_calculator_core/Cargo.toml" > "pearl_calculator_core/Cargo.toml.tmp" && mv "pearl_calculator_core/Cargo.toml.tmp" "pearl_calculator_core/Cargo.toml"
 
           TARGET_CARGO="pearl_calculator_ui/src-tauri/Cargo.toml"
 
           sed "s/^pearl_calculator_core = .*/pearl_calculator_core = { path = \"..\/..\/pearl_calculator_core\", version = \"$VERSION\" }/" "$TARGET_CARGO" > "$TARGET_CARGO.tmp" && mv "$TARGET_CARGO.tmp" "$TARGET_CARGO"
 
+      - name: Build
+        working-directory: pearl_calculator_ui
+        run: pnpm tauri build ${{ matrix.args }}
+
       - name: Generate Release Body
+        if: matrix.os == 'ubuntu-latest' 
+        id: release-body
         shell: bash
         run: |
           CURRENT_TAG=${GITHUB_REF#refs/tags/}
-          
           echo "Current Tag: $CURRENT_TAG"
 
           if [[ "$CURRENT_TAG" != *"-"* ]]; then
@@ -108,85 +136,95 @@ jobs:
           fi
 
           LOG_FORMAT="* [\`%h\`](http://github.com/${{ github.repository }}/commit/%H) - %s by @%an"
-
           FEAT_LOG=$(git log $RANGE --no-merges --grep="^feat" -i --pretty=format:"$LOG_FORMAT")
-
           FIX_LOG=$(git log $RANGE --no-merges --grep="^fix" -i --pretty=format:"$LOG_FORMAT")
-
           OTHER_LOG=$(git log $RANGE --no-merges --invert-grep --grep="^feat" --grep="^fix" -i --pretty=format:"$LOG_FORMAT")
 
           {
             echo "RELEASE_BODY<<EOF"
             echo "## What's Changed"
             echo ""
-          
-            if [ -n "$FEAT_LOG" ]; then
-              echo "### ✨ New Features"
-              echo "$FEAT_LOG"
-              echo ""
-            fi
-          
-            if [ -n "$FIX_LOG" ]; then
-              echo "### 🐛 Bug Fixes"
-              echo "$FIX_LOG"
-              echo ""
-            fi
-          
-            if [ -n "$OTHER_LOG" ]; then
-              echo "### 🛠 Other Changes"
-              echo "$OTHER_LOG"
-            fi
-          
+            if [ -n "$FEAT_LOG" ]; then echo "### ✨ New Features"; echo "$FEAT_LOG"; echo ""; fi
+            if [ -n "$FIX_LOG" ]; then echo "### 🐛 Bug Fixes"; echo "$FIX_LOG"; echo ""; fi
+            if [ -n "$OTHER_LOG" ]; then echo "### 🛠 Other Changes"; echo "$OTHER_LOG"; fi
             echo "EOF"
           } >> "$GITHUB_ENV"
 
-      - name: Restore Icon
-        working-directory: pearl_calculator_ui
-        shell: bash
-        env:
-          ICON_URL: ${{ secrets.ICON_URL }}
-        run: |
-          curl -L "$ICON_URL" -o temp-icon.png --create-dirs --fail
-          
-          if [ -s temp-icon.png ]; then
-          echo "✅ Icon downloaded. Generating platform specific icons..."
-          pnpm tauri icon temp-icon.png
-          else
-          echo "⚠️ Icon download failed or file is empty. Skipping icon restoration."
-          fi
-
-      - uses: tauri-apps/tauri-action@v0
-        id: tauri-build
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: ${{ github.ref_name }}
-          releaseName: 'Pearl Calculator RS ${{ github.ref_name }}'
-          releaseBody: ${{ env.RELEASE_BODY }}
-          releaseDraft: true
+          body: ${{ env.RELEASE_BODY }} 
+          draft: true
           prerelease: ${{ contains(github.ref_name, 'beta') }}
-          projectPath: ./pearl_calculator_ui
-          args: ${{ matrix.args }}
 
-      - name: Upload Windows Portable EXE
-        if: runner.os == 'Windows'
+      - name: Rename and Upload Assets
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG_NAME: ${{ github.ref_name }}
+          PLATFORM: ${{ matrix.platform_name }}
+          ARCH: ${{ matrix.arch_name }}
+          TARGET: ${{ matrix.target }}
         run: |
           VERSION=${GITHUB_REF#refs/tags/v}
-          EXE_NAME="pearl-calculator-rs.exe"
-          UPLOAD_NAME="Pearl-Calculator-RS_${VERSION}_Portable.exe"
-          TARGET_DIR="target/release"
+          echo "Processing assets for $PLATFORM ($ARCH)..."
           
-          if [ -f "$TARGET_DIR/$EXE_NAME" ]; then
-            cd "$TARGET_DIR"
-            mv "$EXE_NAME" "$UPLOAD_NAME"
-            gh release upload "$TAG_NAME" "$UPLOAD_NAME" --clobber
+          mkdir -p upload_dist
+
+          if [[ "${{ matrix.args }}" == *"--target"* ]]; then
+             BASE_DIR="pearl_calculator_ui/src-tauri/target/$TARGET/release"
           else
-            echo "❌ Error: Could not find executable!"
-            exit 1
+             BASE_DIR="pearl_calculator_ui/src-tauri/target/release"
+          fi
+          
+          echo "Base Directory: $BASE_DIR"
+
+          process_file() {
+            local src=$1
+            local type=$2
+            local ext=$3
+            
+            if [ -f "$src" ]; then
+              local new_name="Pearl-Calculator-RS_${VERSION}_${PLATFORM}_${ARCH}_${type}.${ext}"
+              echo "Found $type: $src -> $new_name"
+              cp "$src" "upload_dist/$new_name"
+            else
+              echo "Checking for $src... NOT FOUND"
+            fi
+          }
+
+          # Windows
+          if [[ "$PLATFORM" == "windows" ]]; then
+            process_file "$BASE_DIR/bundle/nsis/Pearl Calculator RS_${VERSION}_${ARCH}-setup.exe" "setup" "exe"
+            process_file "$BASE_DIR/pearl_calculator_ui.exe" "portable" "exe"
+          fi
+
+          # Linux
+          if [[ "$PLATFORM" == "linux" ]]; then
+            find "$BASE_DIR/bundle/appimage" -name "*.AppImage" 2>/dev/null | while read -r file; do
+              process_file "$file" "appimage" "AppImage"
+            done
+            find "$BASE_DIR/bundle/deb" -name "*.deb" 2>/dev/null | while read -r file; do
+              process_file "$file" "installer" "deb"
+            done
+          fi
+
+          # macOS
+          if [[ "$PLATFORM" == "macos" ]]; then
+            find "$BASE_DIR/bundle/dmg" -name "*.dmg" 2>/dev/null | while read -r file; do
+              process_file "$file" "installer" "dmg"
+            done
+          fi
+
+          # Upload
+          if [ "$(ls -A upload_dist)" ]; then
+            gh release upload "$TAG_NAME" upload_dist/* --clobber
+          else
+            echo "⚠️ No assets found to upload for $PLATFORM-$ARCH"
+            ls -R "$BASE_DIR/bundle" || true
           fi
 
   deploy-pages:
