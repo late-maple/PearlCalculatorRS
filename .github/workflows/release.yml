@@ -145,7 +145,7 @@ jobs:
           LOG_FORMAT="* [\`%h\`](http://github.com/${{ github.repository }}/commit/%H) - %s by @%an"
           FEAT_LOG=$(git log $RANGE --no-merges --grep="^feat" -i --pretty=format:"$LOG_FORMAT")
           FIX_LOG=$(git log $RANGE --no-merges --grep="^fix" -i --pretty=format:"$LOG_FORMAT")
-          OTHER_LOG=$(git log $RANGE --no-merges --invert-grep --grep="^feat" --grep="^fix" -i --pretty=format:"$LOG_FORMAT")
+          OTHER_LOG=$(git log $RANGE --no-merges --invert-grep --grep="^feat" --grep="^fix" --grep="^ci" -i --pretty=format:"$LOG_FORMAT")
 
           {
             echo "RELEASE_BODY<<EOF"
