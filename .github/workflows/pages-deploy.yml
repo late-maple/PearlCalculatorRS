@@ -1,0 +1,56 @@
+name: Deploy to Cloudflare Pages
+
+on:
+  workflow_call:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy to Cloudflare Pages
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Install wasm-pack
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+          cache-dependency-path: pearl_calculator_ui/pnpm-lock.yaml
+
+      - name: Sync Version
+        shell: bash
+        run: |
+          FULL_VERSION=${GITHUB_REF#refs/tags/v}
+          VERSION=${FULL_VERSION%%-*}
+          
+          cd pearl_calculator_ui
+          pnpm version $VERSION --no-git-tag-version --allow-same-version
+
+      - name: Install Dependencies
+        working-directory: pearl_calculator_ui
+        run: pnpm install
+
+      - name: Build WASM & Frontend
+        working-directory: pearl_calculator_ui
+        run: pnpm build
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: pearlcalculatorrs
+          directory: pearl_calculator_ui/dist
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}

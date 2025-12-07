@@ -188,3 +188,8 @@ jobs:
             echo "❌ Error: Could not find executable!"
             exit 1
           fi
+
+  deploy-pages:
+    needs: call-test-workflow
+    uses: ./.github/workflows/pages-deploy.yml
+    secrets: inherit
