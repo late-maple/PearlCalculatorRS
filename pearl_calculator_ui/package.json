@@ -7,7 +7,7 @@
     "dev": "vite",
     "dev:wasm": "pnpm build:wasm && vite",
     "build": "pnpm build:wasm && tsc && vite build",
-    "build:wasm": "wasm-pack build ../pearl_calculator_wasm --target bundler",
+    "build:wasm": "cargo build -p pearl_calculator_wasm --target wasm32-unknown-unknown --release && wasm-bindgen ../target/wasm32-unknown-unknown/release/pearl_calculator_wasm.wasm --out-dir ../pearl_calculator_wasm/pkg --target bundler",
     "preview": "vite preview",
     "tauri": "tauri"
   },
