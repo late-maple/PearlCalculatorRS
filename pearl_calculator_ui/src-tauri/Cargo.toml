@@ -1,5 +1,5 @@
 [package]
-name = "pearl-calculator-rs"
+name = "pearl_calculator_ui"
 version.workspace = true
 authors.workspace = true
 edition.workspace = true
