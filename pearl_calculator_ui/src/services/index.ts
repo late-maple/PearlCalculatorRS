@@ -10,7 +10,7 @@ function hasTauriInternals(win: Window): win is TauriWindow {
     return '__TAURI_INTERNALS__' in win;
 }
 
-const isTauriCheck = hasTauriInternals(window) && !!window.__TAURI_INTERNALS__;
+const isTauriCheck = hasTauriInternals(window) && !!(window as TauriWindow).__TAURI_INTERNALS__;
 export const calculatorService: ICalculatorService = isTauriCheck
     ? new TauriCalculatorService()
     : new WebCalculatorService();
