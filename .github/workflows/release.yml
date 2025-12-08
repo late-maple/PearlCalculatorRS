@@ -116,6 +116,24 @@ jobs:
 
           sed "s/^pearl_calculator_core = .*/pearl_calculator_core = { path = \"..\/..\/pearl_calculator_core\", version = \"$VERSION\" }/" "$TARGET_CARGO" > "$TARGET_CARGO.tmp" && mv "$TARGET_CARGO.tmp" "$TARGET_CARGO"
 
+      - name: Restore Icon
+        working-directory: pearl_calculator_ui
+        shell: bash
+        env:
+          ICON_URL: ${{ secrets.ICON_URL }}
+        run: |
+          if [ -n "$ICON_URL" ]; then
+            curl -L "$ICON_URL" -o temp-icon.png --create-dirs --fail
+            if [ -s temp-icon.png ]; then
+              echo "✅ Icon downloaded. Generating platform specific icons..."
+              pnpm tauri icon temp-icon.png
+            else
+              echo "⚠️ Icon download failed or file is empty. Skipping icon restoration."
+            fi
+          else
+            echo "⚠️ ICON_URL secret not set. Skipping icon restoration."
+          fi
+
       - name: Build
         working-directory: pearl_calculator_ui
         run: pnpm tauri build ${{ matrix.args }}
