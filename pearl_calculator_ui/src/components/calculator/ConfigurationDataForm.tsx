@@ -114,7 +114,9 @@ export default function ConfigurationDataForm({
 						{t("calculator.configuration_legend")}
 						{yOffset !== 0 && (
 							<span className="text-xs font-normal text-muted-foreground">
-								{t("calculator.y_offset", { offset: (yOffset > 0 ? "+" : "") + yOffset })}
+								{t("calculator.y_offset", {
+									offset: (yOffset > 0 ? "+" : "") + yOffset,
+								})}
 							</span>
 						)}
 					</FieldLegend>
@@ -242,10 +244,18 @@ export default function ConfigurationDataForm({
 											<SelectValue />
 										</SelectTrigger>
 										<SelectContent>
-											<SelectItem value="SouthEast">{t("calculator.direction_se_short")}</SelectItem>
-											<SelectItem value="NorthWest">{t("calculator.direction_nw_short")}</SelectItem>
-											<SelectItem value="SouthWest">{t("calculator.direction_sw_short")}</SelectItem>
-											<SelectItem value="NorthEast">{t("calculator.direction_ne_short")}</SelectItem>
+											<SelectItem value="SouthEast">
+												{t("calculator.direction_se_short")}
+											</SelectItem>
+											<SelectItem value="NorthWest">
+												{t("calculator.direction_nw_short")}
+											</SelectItem>
+											<SelectItem value="SouthWest">
+												{t("calculator.direction_sw_short")}
+											</SelectItem>
+											<SelectItem value="NorthEast">
+												{t("calculator.direction_ne_short")}
+											</SelectItem>
 										</SelectContent>
 									</Select>
 								</div>
@@ -267,10 +277,18 @@ export default function ConfigurationDataForm({
 											<SelectValue />
 										</SelectTrigger>
 										<SelectContent>
-											<SelectItem value="SouthEast">{t("calculator.direction_se_short")}</SelectItem>
-											<SelectItem value="NorthWest">{t("calculator.direction_nw_short")}</SelectItem>
-											<SelectItem value="SouthWest">{t("calculator.direction_sw_short")}</SelectItem>
-											<SelectItem value="NorthEast">{t("calculator.direction_ne_short")}</SelectItem>
+											<SelectItem value="SouthEast">
+												{t("calculator.direction_se_short")}
+											</SelectItem>
+											<SelectItem value="NorthWest">
+												{t("calculator.direction_nw_short")}
+											</SelectItem>
+											<SelectItem value="SouthWest">
+												{t("calculator.direction_sw_short")}
+											</SelectItem>
+											<SelectItem value="NorthEast">
+												{t("calculator.direction_ne_short")}
+											</SelectItem>
 										</SelectContent>
 									</Select>
 								</div>

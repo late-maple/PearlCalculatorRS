@@ -65,20 +65,28 @@ const DataTableRow = React.memo(
 			</TableRow>
 		);
 	},
-	(prev, next) => prev.row.original === next.row.original && prev.isHighlighted === next.isHighlighted,
+	(prev, next) =>
+		prev.row.original === next.row.original &&
+		prev.isHighlighted === next.isHighlighted,
 );
 
 export interface DataTableRef {
 	scrollToRow: (rowIndex: number) => void;
 }
 
-export const DataTable = React.forwardRef<DataTableRef, DataTableProps<any, any>>(function DataTable({
-	columns,
-	data,
-	defaultColumnSizing = DEFAULT_COLUMN_SIZES,
-	minColumnSizes = MIN_COLUMN_SIZES,
-	onTrace,
-}, ref) {
+export const DataTable = React.forwardRef<
+	DataTableRef,
+	DataTableProps<any, any>
+>(function DataTable(
+	{
+		columns,
+		data,
+		defaultColumnSizing = DEFAULT_COLUMN_SIZES,
+		minColumnSizes = MIN_COLUMN_SIZES,
+		onTrace,
+	},
+	ref,
+) {
 	const { t } = useTranslation();
 	const [sorting, setSorting] = React.useState<SortingState>([
 		{
@@ -93,30 +101,36 @@ export const DataTable = React.forwardRef<DataTableRef, DataTableProps<any, any>
 	const [scrollTop, setScrollTop] = React.useState(0);
 	const [viewportHeight, setViewportHeight] = React.useState(600);
 	const scrollRequestRef = React.useRef<number | null>(null);
-	const [highlightedRowIndex, setHighlightedRowIndex] = React.useState<number | null>(null);
+	const [highlightedRowIndex, setHighlightedRowIndex] = React.useState<
+		number | null
+	>(null);
 	const highlightTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
 	const ROW_HEIGHT = 25;
 	const BUFFER_ROWS = 5;
 
-	React.useImperativeHandle(ref, () => ({
-		scrollToRow: (rowIndex: number) => {
-			if (viewportRef.current) {
-				const targetScrollTop = rowIndex * ROW_HEIGHT - viewportHeight / 3;
-				const clampedScrollTop = Math.max(0, targetScrollTop);
-				viewportRef.current.scrollTop = clampedScrollTop;
-				setScrollTop(clampedScrollTop);
+	React.useImperativeHandle(
+		ref,
+		() => ({
+			scrollToRow: (rowIndex: number) => {
+				if (viewportRef.current) {
+					const targetScrollTop = rowIndex * ROW_HEIGHT - viewportHeight / 3;
+					const clampedScrollTop = Math.max(0, targetScrollTop);
+					viewportRef.current.scrollTop = clampedScrollTop;
+					setScrollTop(clampedScrollTop);
 
-				if (highlightTimeoutRef.current) {
-					clearTimeout(highlightTimeoutRef.current);
+					if (highlightTimeoutRef.current) {
+						clearTimeout(highlightTimeoutRef.current);
+					}
+					setHighlightedRowIndex(rowIndex);
+					highlightTimeoutRef.current = setTimeout(() => {
+						setHighlightedRowIndex(null);
+					}, 2000);
 				}
-				setHighlightedRowIndex(rowIndex);
-				highlightTimeoutRef.current = setTimeout(() => {
-					setHighlightedRowIndex(null);
-				}, 2000);
-			}
-		},
-	}), [viewportHeight]);
+			},
+		}),
+		[viewportHeight],
+	);
 
 	React.useEffect(() => {
 		if (viewportRef.current) {
@@ -288,9 +302,9 @@ export const DataTable = React.forwardRef<DataTableRef, DataTableProps<any, any>
 										{header.isPlaceholder
 											? null
 											: flexRender(
-												header.column.columnDef.header,
-												header.getContext(),
-											)}
+													header.column.columnDef.header,
+													header.getContext(),
+												)}
 										{!isLastColumn && (
 											<div
 												onMouseDown={handleResize(

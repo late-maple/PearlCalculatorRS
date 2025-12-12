@@ -1,5 +1,5 @@
-import { useTranslation } from "react-i18next";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { Badge } from "@/components/ui/badge";
 import { useDirectionLabel } from "@/hooks/use-direction-label";
 import type { TNTResult } from "@/types/domain";
@@ -55,10 +55,14 @@ export default function RightPanel({
 			>
 				{foundSolutions > 0 ? (
 					<>
-						<div>{t("calculator.found_solutions", { count: foundSolutions })}</div>
+						<div>
+							{t("calculator.found_solutions", { count: foundSolutions })}
+						</div>
 						<div className="flex items-center gap-2">
 							{t("calculator.label_direction")}
-							<Badge className="rounded-full px-2 py-0 h-5">{getCardinalLabel(direction)}</Badge>
+							<Badge className="rounded-full px-2 py-0 h-5">
+								{getCardinalLabel(direction)}
+							</Badge>
 						</div>
 					</>
 				) : (

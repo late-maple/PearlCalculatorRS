@@ -1,5 +1,5 @@
-import { calculatorService } from "@/services";
 import { useState } from "react";
+import { calculatorService } from "@/services";
 import type {
 	CalculatorInputs,
 	GeneralConfig,
@@ -94,7 +94,8 @@ export function useTNTCalculator() {
 
 			console.log("Sending calculation input:", calculationInput);
 
-			const results = await calculatorService.calculateTNTAmount(calculationInput);
+			const results =
+				await calculatorService.calculateTNTAmount(calculationInput);
 
 			return { success: true, data: results };
 		} catch (error) {

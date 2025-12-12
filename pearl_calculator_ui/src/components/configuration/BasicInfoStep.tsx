@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import {
 	Card,
 	CardContent,
@@ -9,7 +10,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useConfigurationState } from "@/context/ConfigurationStateContext";
 import { cn } from "@/lib/utils";
-import { useTranslation } from "react-i18next";
 
 interface BasicInfoStepProps {
 	errors: Record<string, string>;
@@ -42,7 +42,9 @@ export function BasicInfoStep({ errors, onForceNext }: BasicInfoStepProps) {
 							<Label>{t("configuration_page.cannon_center_label")}</Label>
 							<div className="grid grid-cols-2 gap-2">
 								<div className="space-y-1">
-									<Label className="text-xs text-muted-foreground">{t("configuration_page.label_x")}</Label>
+									<Label className="text-xs text-muted-foreground">
+										{t("configuration_page.label_x")}
+									</Label>
 									<Input
 										type="number"
 										value={cannonCenter.x}
@@ -53,12 +55,14 @@ export function BasicInfoStep({ errors, onForceNext }: BasicInfoStepProps) {
 										className={cn(
 											"h-7 text-xs font-mono px-2 py-0 shadow-none",
 											errors.cannon_x &&
-											"border-destructive focus-visible:ring-destructive placeholder:text-destructive/60",
+												"border-destructive focus-visible:ring-destructive placeholder:text-destructive/60",
 										)}
 									/>
 								</div>
 								<div className="space-y-1">
-									<Label className="text-xs text-muted-foreground">{t("configuration_page.label_z")}</Label>
+									<Label className="text-xs text-muted-foreground">
+										{t("configuration_page.label_z")}
+									</Label>
 									<Input
 										type="number"
 										value={cannonCenter.z}
@@ -69,7 +73,7 @@ export function BasicInfoStep({ errors, onForceNext }: BasicInfoStepProps) {
 										className={cn(
 											"h-7 text-xs font-mono px-2 py-0 shadow-none",
 											errors.cannon_z &&
-											"border-destructive focus-visible:ring-destructive placeholder:text-destructive/60",
+												"border-destructive focus-visible:ring-destructive placeholder:text-destructive/60",
 										)}
 									/>
 								</div>
@@ -83,7 +87,9 @@ export function BasicInfoStep({ errors, onForceNext }: BasicInfoStepProps) {
 							<Label>{t("configuration_page.pearl_coord_label")}</Label>
 							<div className="grid grid-cols-3 gap-2">
 								<div className="space-y-1">
-									<Label className="text-xs text-muted-foreground">{t("configuration_page.label_x")}</Label>
+									<Label className="text-xs text-muted-foreground">
+										{t("configuration_page.label_x")}
+									</Label>
 									<Input
 										type="number"
 										value={draftConfig.pearl_x_position}
@@ -97,12 +103,14 @@ export function BasicInfoStep({ errors, onForceNext }: BasicInfoStepProps) {
 										className={cn(
 											"h-7 text-xs font-mono px-2 py-0 shadow-none",
 											errors.pearl_x &&
-											"border-destructive focus-visible:ring-destructive placeholder:text-destructive/60",
+												"border-destructive focus-visible:ring-destructive placeholder:text-destructive/60",
 										)}
 									/>
 								</div>
 								<div className="space-y-1">
-									<Label className="text-xs text-muted-foreground">{t("configuration_page.label_y")}</Label>
+									<Label className="text-xs text-muted-foreground">
+										{t("configuration_page.label_y")}
+									</Label>
 									<Input
 										type="number"
 										value={draftConfig.pearl_y_position}
@@ -116,12 +124,14 @@ export function BasicInfoStep({ errors, onForceNext }: BasicInfoStepProps) {
 										className={cn(
 											"h-7 text-xs font-mono px-2 py-0 shadow-none",
 											errors.pearl_y &&
-											"border-destructive focus-visible:ring-destructive placeholder:text-destructive/60",
+												"border-destructive focus-visible:ring-destructive placeholder:text-destructive/60",
 										)}
 									/>
 								</div>
 								<div className="space-y-1">
-									<Label className="text-xs text-muted-foreground">{t("configuration_page.label_z")}</Label>
+									<Label className="text-xs text-muted-foreground">
+										{t("configuration_page.label_z")}
+									</Label>
 									<Input
 										type="number"
 										value={draftConfig.pearl_z_position}
@@ -135,7 +145,7 @@ export function BasicInfoStep({ errors, onForceNext }: BasicInfoStepProps) {
 										className={cn(
 											"h-7 text-xs font-mono px-2 py-0 shadow-none",
 											errors.pearl_z &&
-											"border-destructive focus-visible:ring-destructive placeholder:text-destructive/60",
+												"border-destructive focus-visible:ring-destructive placeholder:text-destructive/60",
 										)}
 									/>
 								</div>
@@ -149,7 +159,9 @@ export function BasicInfoStep({ errors, onForceNext }: BasicInfoStepProps) {
 							<Label>{t("configuration_page.pearl_momentum_label")}</Label>
 							<div className="grid grid-cols-3 gap-2">
 								<div className="space-y-1">
-									<Label className="text-xs text-muted-foreground">{t("configuration_page.label_x")}</Label>
+									<Label className="text-xs text-muted-foreground">
+										{t("configuration_page.label_x")}
+									</Label>
 									<Input
 										type="number"
 										value={pearlMomentum.x}
@@ -160,12 +172,14 @@ export function BasicInfoStep({ errors, onForceNext }: BasicInfoStepProps) {
 										className={cn(
 											"h-7 text-xs font-mono px-2 py-0 shadow-none",
 											errors.momentum_x &&
-											"border-destructive focus-visible:ring-destructive placeholder:text-destructive/60",
+												"border-destructive focus-visible:ring-destructive placeholder:text-destructive/60",
 										)}
 									/>
 								</div>
 								<div className="space-y-1">
-									<Label className="text-xs text-muted-foreground">{t("configuration_page.label_y")}</Label>
+									<Label className="text-xs text-muted-foreground">
+										{t("configuration_page.label_y")}
+									</Label>
 									<Input
 										type="number"
 										value={draftConfig.pearl_y_motion}
@@ -180,12 +194,14 @@ export function BasicInfoStep({ errors, onForceNext }: BasicInfoStepProps) {
 										className={cn(
 											"h-7 text-xs font-mono px-2 py-0 shadow-none",
 											errors.momentum_y &&
-											"border-destructive focus-visible:ring-destructive placeholder:text-destructive/60",
+												"border-destructive focus-visible:ring-destructive placeholder:text-destructive/60",
 										)}
 									/>
 								</div>
 								<div className="space-y-1">
-									<Label className="text-xs text-muted-foreground">{t("configuration_page.label_z")}</Label>
+									<Label className="text-xs text-muted-foreground">
+										{t("configuration_page.label_z")}
+									</Label>
 									<Input
 										type="number"
 										value={pearlMomentum.z}
@@ -196,7 +212,7 @@ export function BasicInfoStep({ errors, onForceNext }: BasicInfoStepProps) {
 										className={cn(
 											"h-7 text-xs font-mono px-2 py-0 shadow-none",
 											errors.momentum_z &&
-											"border-destructive focus-visible:ring-destructive placeholder:text-destructive/60",
+												"border-destructive focus-visible:ring-destructive placeholder:text-destructive/60",
 										)}
 									/>
 								</div>
@@ -224,7 +240,7 @@ export function BasicInfoStep({ errors, onForceNext }: BasicInfoStepProps) {
 								className={cn(
 									"h-7 text-xs font-mono px-2 py-0 shadow-none",
 									errors.max_tnt &&
-									"border-destructive focus-visible:ring-destructive placeholder:text-destructive/60",
+										"border-destructive focus-visible:ring-destructive placeholder:text-destructive/60",
 								)}
 							/>
 							<p className="text-[0.8rem] text-muted-foreground">

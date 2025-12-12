@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Badge } from "@/components/ui/badge";
 import {
 	Card,
@@ -8,7 +9,6 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { useConfigurationState } from "@/context/ConfigurationStateContext";
-import { useTranslation } from "react-i18next";
 
 export function PreviewStep() {
 	const { draftConfig, cannonCenter, pearlMomentum, redTNTLocation } =
@@ -33,7 +33,9 @@ export function PreviewStep() {
 							<div className="grid grid-cols-2 gap-4">
 								<div className="space-y-2 p-3 rounded-lg border bg-muted/50 h-full min-h-[110px]">
 									<div className="flex items-center justify-between mb-2">
-										<span className="text-sm font-bold">{t("configuration_page.pearl_coord_label")}</span>
+										<span className="text-sm font-bold">
+											{t("configuration_page.pearl_coord_label")}
+										</span>
 									</div>
 									<div className="flex flex-col gap-1">
 										<div className="text-xs text-muted-foreground font-mono">
@@ -59,7 +61,9 @@ export function PreviewStep() {
 
 								<div className="space-y-2 p-3 rounded-lg border bg-muted/50 h-full min-h-[110px]">
 									<div className="flex items-center justify-between mb-2">
-										<span className="text-sm font-bold">{t("configuration_page.pearl_momentum_label")}</span>
+										<span className="text-sm font-bold">
+											{t("configuration_page.pearl_momentum_label")}
+										</span>
 									</div>
 									<div className="flex flex-col gap-1">
 										<div className="text-xs text-muted-foreground font-mono">
@@ -81,7 +85,9 @@ export function PreviewStep() {
 
 								<div className="space-y-2 p-3 rounded-lg border bg-muted/50 h-full min-h-[110px]">
 									<div className="flex items-center justify-between mb-2">
-										<span className="text-sm font-bold">{t("configuration_page.calculated_offset")}</span>
+										<span className="text-sm font-bold">
+											{t("configuration_page.calculated_offset")}
+										</span>
 									</div>
 									<div className="flex flex-col gap-1">
 										<div className="text-xs text-muted-foreground font-mono">
@@ -111,7 +117,9 @@ export function PreviewStep() {
 
 								<div className="space-y-2 p-3 rounded-lg border bg-muted/50 h-full min-h-[110px]">
 									<div className="flex items-center justify-between mb-2">
-										<span className="text-sm font-bold">{t("configuration_page.max_tnt_label")}</span>
+										<span className="text-sm font-bold">
+											{t("configuration_page.max_tnt_label")}
+										</span>
 									</div>
 									<div className="text-sm font-medium font-mono text-muted-foreground">
 										{t("configuration_page.label_amount")}:{" "}
@@ -130,7 +138,9 @@ export function PreviewStep() {
 							<div className="grid grid-cols-2 gap-4">
 								<div className="space-y-2 p-3 rounded-lg border bg-muted/50 h-full min-h-[110px]">
 									<div className="flex items-center justify-between mb-2">
-										<span className="text-sm font-bold">{t("configuration_page.nw_short")}</span>
+										<span className="text-sm font-bold">
+											{t("configuration_page.nw_short")}
+										</span>
 										{redTNTLocation === "NorthWest" && (
 											<Badge
 												variant="destructive"
@@ -168,7 +178,9 @@ export function PreviewStep() {
 								</div>
 								<div className="space-y-2 p-3 rounded-lg border bg-muted/50 h-full min-h-[110px]">
 									<div className="flex items-center justify-between mb-2">
-										<span className="text-sm font-bold">{t("configuration_page.ne_short")}</span>
+										<span className="text-sm font-bold">
+											{t("configuration_page.ne_short")}
+										</span>
 										{redTNTLocation === "NorthEast" && (
 											<Badge
 												variant="destructive"
@@ -206,7 +218,9 @@ export function PreviewStep() {
 								</div>
 								<div className="space-y-2 p-3 rounded-lg border bg-muted/50 h-full min-h-[110px]">
 									<div className="flex items-center justify-between mb-2">
-										<span className="text-sm font-bold">{t("configuration_page.sw_short")}</span>
+										<span className="text-sm font-bold">
+											{t("configuration_page.sw_short")}
+										</span>
 										{redTNTLocation === "SouthWest" && (
 											<Badge
 												variant="destructive"
@@ -244,7 +258,9 @@ export function PreviewStep() {
 								</div>
 								<div className="space-y-2 p-3 rounded-lg border bg-muted/50 h-full min-h-[110px]">
 									<div className="flex items-center justify-between mb-2">
-										<span className="text-sm font-bold">{t("configuration_page.se_short")}</span>
+										<span className="text-sm font-bold">
+											{t("configuration_page.se_short")}
+										</span>
 										{redTNTLocation === "SouthEast" && (
 											<Badge
 												variant="destructive"

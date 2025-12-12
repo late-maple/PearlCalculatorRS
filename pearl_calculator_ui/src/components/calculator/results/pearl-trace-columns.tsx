@@ -1,7 +1,7 @@
 "use client";
-import { useTranslation } from "react-i18next";
 
 import type { ColumnDef } from "@tanstack/react-table";
+import { useTranslation } from "react-i18next";
 
 export type PearlTracePoint = {
 	id: string;
@@ -16,7 +16,11 @@ export const pearlTraceColumns: ColumnDef<PearlTracePoint>[] = [
 		accessorKey: "tick",
 		header: () => {
 			const { t } = useTranslation();
-			return <div className="flex justify-center font-bold">{t("calculator.header_tick")}</div>;
+			return (
+				<div className="flex justify-center font-bold">
+					{t("calculator.header_tick")}
+				</div>
+			);
 		},
 		cell: ({ row }) => {
 			return (
@@ -28,7 +32,11 @@ export const pearlTraceColumns: ColumnDef<PearlTracePoint>[] = [
 		accessorKey: "x",
 		header: () => {
 			const { t } = useTranslation();
-			return <div className="flex justify-center font-bold">{t("calculator.header_x")}</div>;
+			return (
+				<div className="flex justify-center font-bold">
+					{t("calculator.header_x")}
+				</div>
+			);
 		},
 		cell: ({ row }) => {
 			const amount = parseFloat(row.getValue("x"));
@@ -40,7 +48,11 @@ export const pearlTraceColumns: ColumnDef<PearlTracePoint>[] = [
 		accessorKey: "y",
 		header: () => {
 			const { t } = useTranslation();
-			return <div className="flex justify-center font-bold">{t("calculator.header_y")}</div>;
+			return (
+				<div className="flex justify-center font-bold">
+					{t("calculator.header_y")}
+				</div>
+			);
 		},
 		cell: ({ row }) => {
 			const amount = parseFloat(row.getValue("y"));
@@ -52,7 +64,11 @@ export const pearlTraceColumns: ColumnDef<PearlTracePoint>[] = [
 		accessorKey: "z",
 		header: () => {
 			const { t } = useTranslation();
-			return <div className="flex justify-center font-bold">{t("calculator.header_z")}</div>;
+			return (
+				<div className="flex justify-center font-bold">
+					{t("calculator.header_z")}
+				</div>
+			);
 		},
 		cell: ({ row }) => {
 			const amount = parseFloat(row.getValue("z"));

@@ -1,11 +1,5 @@
 import { Info } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import {
 	Field,
@@ -16,6 +10,12 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
 import type { CalculatorInputs } from "@/types/domain";
 
 interface TNTCalculationFormProps {
@@ -38,7 +38,9 @@ export default function TNTCalculationForm({
 					</FieldLegend>
 					<FieldGroup className="grid grid-cols-2 gap-4">
 						<Field>
-							<FieldLabel htmlFor="pearl-x">{t("calculator.label_pearl_x")}</FieldLabel>
+							<FieldLabel htmlFor="pearl-x">
+								{t("calculator.label_pearl_x")}
+							</FieldLabel>
 							<Input
 								id="pearl-x"
 								type="number"
@@ -48,7 +50,9 @@ export default function TNTCalculationForm({
 							/>
 						</Field>
 						<Field>
-							<FieldLabel htmlFor="pearl-z">{t("calculator.label_pearl_z")}</FieldLabel>
+							<FieldLabel htmlFor="pearl-z">
+								{t("calculator.label_pearl_z")}
+							</FieldLabel>
 							<Input
 								id="pearl-z"
 								type="number"
@@ -61,7 +65,9 @@ export default function TNTCalculationForm({
 					<FieldGroup>
 						<Field>
 							<div className="flex items-center gap-2">
-								<FieldLabel htmlFor="cannon-y">{t("calculator.label_cannon_y")}</FieldLabel>
+								<FieldLabel htmlFor="cannon-y">
+									{t("calculator.label_cannon_y")}
+								</FieldLabel>
 								<TooltipProvider>
 									<Tooltip>
 										<TooltipTrigger asChild>
@@ -91,7 +97,9 @@ export default function TNTCalculationForm({
 					</FieldGroup>
 					<FieldGroup className="grid grid-cols-2 gap-4">
 						<Field>
-							<FieldLabel htmlFor="dest-x">{t("calculator.label_dest_x")}</FieldLabel>
+							<FieldLabel htmlFor="dest-x">
+								{t("calculator.label_dest_x")}
+							</FieldLabel>
 							<Input
 								id="dest-x"
 								type="number"
@@ -101,7 +109,9 @@ export default function TNTCalculationForm({
 							/>
 						</Field>
 						<Field>
-							<FieldLabel htmlFor="dest-z">{t("calculator.label_dest_z")}</FieldLabel>
+							<FieldLabel htmlFor="dest-z">
+								{t("calculator.label_dest_z")}
+							</FieldLabel>
 							<Input
 								id="dest-z"
 								type="number"

@@ -1,7 +1,7 @@
+import { useTranslation } from "react-i18next";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { CompactInput } from "./CompactInput";
-import { useTranslation } from "react-i18next";
 
 interface TNTInputGroupProps {
 	title: string;
@@ -69,7 +69,7 @@ export function TNTInputGroup({
 								className={cn(
 									"cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors px-2 h-auto min-h-0 leading-none",
 									hasError &&
-									"border-destructive text-destructive hover:bg-destructive/10",
+										"border-destructive text-destructive hover:bg-destructive/10",
 								)}
 							>
 								{t("configuration_page.set_red_badge")}

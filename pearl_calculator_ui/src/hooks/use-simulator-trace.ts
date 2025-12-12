@@ -1,5 +1,5 @@
-import { calculatorService } from "@/services";
 import { useToastNotifications } from "@/hooks/use-toast-notifications";
+import { calculatorService } from "@/services";
 import type { PearlTraceResult, SimulatorConfig } from "@/types/domain";
 
 export function useSimulatorTrace() {
@@ -23,14 +23,14 @@ export function useSimulatorTrace() {
 						x: config.tntA.pos.x,
 						y: config.tntA.pos.y,
 						z: config.tntA.pos.z,
-						amount: config.tntA.amount
+						amount: config.tntA.amount,
 					},
 					{
 						x: config.tntB.pos.x,
 						y: config.tntB.pos.y,
 						z: config.tntB.pos.z,
-						amount: config.tntB.amount
-					}
+						amount: config.tntB.amount,
+					},
 				],
 
 				version: version,

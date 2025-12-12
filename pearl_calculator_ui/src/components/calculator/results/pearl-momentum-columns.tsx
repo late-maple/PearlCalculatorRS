@@ -1,7 +1,7 @@
 "use client";
-import { useTranslation } from "react-i18next";
 
 import type { ColumnDef } from "@tanstack/react-table";
+import { useTranslation } from "react-i18next";
 
 export type PearlMomentumPoint = {
 	id: string;
@@ -16,7 +16,11 @@ export const pearlMomentumColumns: ColumnDef<PearlMomentumPoint>[] = [
 		accessorKey: "tick",
 		header: () => {
 			const { t } = useTranslation();
-			return <div className="flex justify-center font-bold">{t("calculator.header_tick")}</div>;
+			return (
+				<div className="flex justify-center font-bold">
+					{t("calculator.header_tick")}
+				</div>
+			);
 		},
 		cell: ({ row }) => {
 			return (
@@ -28,7 +32,11 @@ export const pearlMomentumColumns: ColumnDef<PearlMomentumPoint>[] = [
 		accessorKey: "vx",
 		header: () => {
 			const { t } = useTranslation();
-			return <div className="flex justify-center font-bold">{t("calculator.header_vx")}</div>;
+			return (
+				<div className="flex justify-center font-bold">
+					{t("calculator.header_vx")}
+				</div>
+			);
 		},
 		cell: ({ row }) => {
 			const amount = parseFloat(row.getValue("vx"));
@@ -40,7 +48,11 @@ export const pearlMomentumColumns: ColumnDef<PearlMomentumPoint>[] = [
 		accessorKey: "vy",
 		header: () => {
 			const { t } = useTranslation();
-			return <div className="flex justify-center font-bold">{t("calculator.header_vy")}</div>;
+			return (
+				<div className="flex justify-center font-bold">
+					{t("calculator.header_vy")}
+				</div>
+			);
 		},
 		cell: ({ row }) => {
 			const amount = parseFloat(row.getValue("vy"));
@@ -52,7 +64,11 @@ export const pearlMomentumColumns: ColumnDef<PearlMomentumPoint>[] = [
 		accessorKey: "vz",
 		header: () => {
 			const { t } = useTranslation();
-			return <div className="flex justify-center font-bold">{t("calculator.header_vz")}</div>;
+			return (
+				<div className="flex justify-center font-bold">
+					{t("calculator.header_vz")}
+				</div>
+			);
 		},
 		cell: ({ row }) => {
 			const amount = parseFloat(row.getValue("vz"));

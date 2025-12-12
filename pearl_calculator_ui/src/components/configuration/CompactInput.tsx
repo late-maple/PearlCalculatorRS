@@ -3,8 +3,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
-
-
 interface CompactInputProps {
 	label: string;
 	value: string | number;
@@ -57,7 +55,7 @@ export function CompactInput({
 					className={cn(
 						"h-7 text-xs font-mono px-2 py-0 shadow-none focus-visible:ring-1 flex-1 min-w-0",
 						error &&
-						"border-destructive focus-visible:ring-destructive placeholder:text-destructive/60",
+							"border-destructive focus-visible:ring-destructive placeholder:text-destructive/60",
 					)}
 					value={localValue}
 					onChange={(e) => handleChange(e.target.value)}

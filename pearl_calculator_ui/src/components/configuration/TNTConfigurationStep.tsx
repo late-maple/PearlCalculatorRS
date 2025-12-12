@@ -1,5 +1,5 @@
-import { useConfigurationState } from "@/context/ConfigurationStateContext";
 import { useTranslation } from "react-i18next";
+import { useConfigurationState } from "@/context/ConfigurationStateContext";
 import { TNTInputGroup } from "./TNTInputGroup";
 
 interface TNTConfigurationStepProps {

@@ -20,7 +20,7 @@ function sliderToTicks(val: number): number {
 	if (val <= 50) {
 		return val * 2;
 	}
-	return 100 * Math.pow(100, (val - 50) / 50);
+	return 100 * 100 ** ((val - 50) / 50);
 }
 
 function ticksToSlider(ticks: number): number {
@@ -44,7 +44,9 @@ export default function AdvancedSettingsForm({
 					</FieldLegend>
 					<FieldGroup className="grid grid-cols-2 gap-4">
 						<Field>
-							<FieldLabel htmlFor="offset-x">{t("calculator.label_offset_x")}</FieldLabel>
+							<FieldLabel htmlFor="offset-x">
+								{t("calculator.label_offset_x")}
+							</FieldLabel>
 							<Input
 								id="offset-x"
 								type="number"
@@ -54,7 +56,9 @@ export default function AdvancedSettingsForm({
 							/>
 						</Field>
 						<Field>
-							<FieldLabel htmlFor="offset-z">{t("calculator.label_offset_z")}</FieldLabel>
+							<FieldLabel htmlFor="offset-z">
+								{t("calculator.label_offset_z")}
+							</FieldLabel>
 							<Input
 								id="offset-z"
 								type="number"
@@ -93,8 +97,7 @@ export default function AdvancedSettingsForm({
 							</div>
 							<p className="mt-1 text-center text-sm text-muted-foreground">
 								{Math.round(inputs.tickRange[0])} -{" "}
-								{Math.round(inputs.tickRange[1])}{" "}
-								{t("calculator.suffix_ticks")}
+								{Math.round(inputs.tickRange[1])} {t("calculator.suffix_ticks")}
 							</p>
 						</Field>
 						<Field>
@@ -113,7 +116,8 @@ export default function AdvancedSettingsForm({
 							</div>
 							<p className="mt-1 text-center text-sm text-muted-foreground">
 								{inputs.distanceRange[0].toFixed(1)} -{" "}
-								{inputs.distanceRange[1].toFixed(1)} {t("calculator.suffix_blocks")}
+								{inputs.distanceRange[1].toFixed(1)}{" "}
+								{t("calculator.suffix_blocks")}
 							</p>
 						</Field>
 					</FieldGroup>
