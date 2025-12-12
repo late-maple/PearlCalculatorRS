@@ -1,5 +1,9 @@
 import { createContext, type ReactNode, useContext, useState } from "react";
-import type { GeneralConfig, PearlVersion } from "../types/domain";
+import type {
+	BitTemplateConfig,
+	GeneralConfig,
+	PearlVersion,
+} from "../types/domain";
 
 interface ConfigContextType {
 	hasConfig: boolean;
@@ -10,11 +14,13 @@ interface ConfigContextType {
 	setConfigData: (data: GeneralConfig) => void;
 	configPath: string;
 	setConfigPath: (path: string) => void;
+	bitTemplateConfig: BitTemplateConfig | null;
+	setBitTemplateConfig: (data: BitTemplateConfig | null) => void;
 	resetConfig: () => void;
 }
 
 const defaultConfig: GeneralConfig = {
-	max_tnt: 3360,
+	max_tnt: 0,
 	north_west_tnt: { x: 0, y: 0, z: 0 },
 	north_east_tnt: { x: 0, y: 0, z: 0 },
 	south_west_tnt: { x: 0, y: 0, z: 0 },
@@ -46,10 +52,13 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
 	const [version, setVersion] = useState<PearlVersion>("Post1212");
 	const [configData, setConfigData] = useState<GeneralConfig>(defaultConfig);
 	const [configPath, setConfigPath] = useState("");
+	const [bitTemplateConfig, setBitTemplateConfig] =
+		useState<BitTemplateConfig | null>(null);
 
 	const resetConfig = () => {
 		setConfigData(emptyConfig);
 		setConfigPath("");
+		setBitTemplateConfig(null);
 	};
 
 	return (
@@ -63,6 +72,8 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
 				setConfigData,
 				configPath,
 				setConfigPath,
+				bitTemplateConfig,
+				setBitTemplateConfig,
 				resetConfig,
 			}}
 		>
