@@ -39,7 +39,7 @@ export function inputStateToConfig(state: BitInputState): BitTemplateConfig {
 	return {
 		SideMode: state.sideCount,
 		DirectionMasks: directionMasks,
-		RedValues: state.sideValues.map((v) => parseInt(v) || 0).reverse(),
+		RedValues: state.sideValues.map((v) => parseInt(v, 10) || 0).reverse(),
 		IsRedArrowCenter: state.isSwapped,
 	};
 }

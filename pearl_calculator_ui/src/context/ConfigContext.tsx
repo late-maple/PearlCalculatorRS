@@ -46,6 +46,7 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
 		setConfigData(defaultConfig);
 		setConfigPath("");
 		setBitTemplateConfig(null);
+		setHasConfig(false);
 	};
 
 	return (

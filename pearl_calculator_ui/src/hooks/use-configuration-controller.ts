@@ -91,12 +91,14 @@ export function useConfigurationController() {
 					newErrors.bit_values_incomplete = t(
 						"configuration_page.validation.required",
 					);
+					isValid = false;
 				}
 				const hasEmptyMask = bitTemplateState.masks.some((m) => !m.direction);
 				if (hasEmptyMask) {
 					newErrors.bit_masks_incomplete = t(
 						"configuration_page.validation.required",
 					);
+					isValid = false;
 				}
 			}
 		}
@@ -279,7 +281,7 @@ export function useConfigurationController() {
 					}
 					config.DirectionMasks = directionMasks;
 					config.RedValues = bitTemplateState.sideValues
-						.map((v) => parseInt(v) || 0)
+						.map((v) => parseInt(v, 10) || 0)
 						.reverse();
 					config.IsRedArrowCenter = bitTemplateState.isSwapped;
 				}
