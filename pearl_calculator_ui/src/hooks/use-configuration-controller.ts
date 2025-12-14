@@ -9,7 +9,7 @@ import { useCalculatorState } from "@/context/CalculatorStateContext";
 import { useConfig } from "@/context/ConfigContext";
 import { useConfigurationState } from "@/context/ConfigurationStateContext";
 import { inputStateToConfig } from "@/lib/bit-template-utils";
-import type { BitDirection, GeneralConfig } from "@/types/domain";
+import { buildExportConfig, convertDraftToConfig } from "@/lib/config-utils";
 
 export function useConfigurationController() {
 	const navigate = useNavigate();
@@ -134,52 +134,12 @@ export function useConfigurationController() {
 		}
 	};
 
-	const convertDraftToConfig = (): GeneralConfig => {
-		const cx = parseFloat(cannonCenter.x) || 0;
-		const cz = parseFloat(cannonCenter.z) || 0;
-
-		const getRelativeTNT = (tnt: { x: string; y: string; z: string }) => ({
-			x: (parseFloat(tnt.x) || 0) - cx,
-			y: parseFloat(tnt.y) || 0,
-			z: (parseFloat(tnt.z) || 0) - cz,
-		});
-
-		const getOppositeDirection = (
-			dir: string | undefined,
-		): "SouthEast" | "NorthWest" | "SouthWest" | "NorthEast" => {
-			switch (dir) {
-				case "NorthWest":
-					return "SouthEast";
-				case "SouthEast":
-					return "NorthWest";
-				case "NorthEast":
-					return "SouthWest";
-				case "SouthWest":
-					return "NorthEast";
-				default:
-					return "SouthEast";
-			}
-		};
-
-		const redDir = redTNTLocation === "NorthWest" ? "NorthWest" : "SouthEast";
-
-		return {
-			north_east_tnt: getRelativeTNT(draftConfig.north_east_tnt),
-			north_west_tnt: getRelativeTNT(draftConfig.north_west_tnt),
-			south_east_tnt: getRelativeTNT(draftConfig.south_east_tnt),
-			south_west_tnt: getRelativeTNT(draftConfig.south_west_tnt),
-			pearl_x_position: 0,
-			pearl_y_motion: parseFloat(draftConfig.pearl_y_motion) || 0,
-			pearl_y_position: parseFloat(draftConfig.pearl_y_position) || 0,
-			pearl_z_position: 0,
-			max_tnt: parseFloat(draftConfig.max_tnt) || 0,
-			default_red_tnt_position: redDir,
-			default_blue_tnt_position: getOppositeDirection(redDir),
-		};
-	};
-
 	const handleApplyToCalculator = () => {
-		const config = convertDraftToConfig();
+		const config = convertDraftToConfig(
+			draftConfig,
+			cannonCenter,
+			redTNTLocation,
+		);
 
 		updateDefaultInput("pearlX", "0");
 		updateDefaultInput("pearlZ", "0");
@@ -208,83 +168,17 @@ export function useConfigurationController() {
 	const handleExport = async () => {
 		try {
 			const path = await save({
-				filters: [
-					{
-						name: "JSON",
-						extensions: ["json"],
-					},
-				],
+				filters: [{ name: "JSON", extensions: ["json"] }],
 			});
 
 			if (path) {
-				const cx = parseFloat(cannonCenter.x) || 0;
-				const cz = parseFloat(cannonCenter.z) || 0;
-
-				const getRelativeTNT = (tnt: { x: string; y: string; z: string }) => ({
-					X: (parseFloat(tnt.x) || 0) - cx,
-					Y: parseFloat(tnt.y) || 0,
-					Z: (parseFloat(tnt.z) || 0) - cz,
-				});
-
-				const pearlX = parseFloat(draftConfig.pearl_x_position) || 0;
-				const pearlZ = parseFloat(draftConfig.pearl_z_position) || 0;
-
-				const getOppositeDirection = (dir: string | undefined) => {
-					switch (dir) {
-						case "NorthWest":
-							return "SouthEast";
-						case "SouthEast":
-							return "NorthWest";
-						case "NorthEast":
-							return "SouthWest";
-						case "SouthWest":
-							return "NorthEast";
-						default:
-							return "SouthEast";
-					}
-				};
-
-				const config: Record<string, unknown> = {
-					NorthEastTNT: getRelativeTNT(draftConfig.north_east_tnt),
-					NorthWestTNT: getRelativeTNT(draftConfig.north_west_tnt),
-					SouthEastTNT: getRelativeTNT(draftConfig.south_east_tnt),
-					SouthWestTNT: getRelativeTNT(draftConfig.south_west_tnt),
-					Offset: {
-						X: pearlX - cx,
-						Z: pearlZ - cz,
-					},
-					Pearl: {
-						Position: {
-							X: 0,
-							Y: parseFloat(draftConfig.pearl_y_position) || 0,
-							Z: 0,
-						},
-						Motion: {
-							X: parseFloat(pearlMomentum.x) || 0,
-							Y: parseFloat(draftConfig.pearl_y_motion) || 0,
-							Z: parseFloat(pearlMomentum.z) || 0,
-						},
-					},
-					MaxTNT: parseFloat(draftConfig.max_tnt) || 0,
-					DefaultRedTNTDirection: redTNTLocation,
-					DefaultBlueTNTDirection: getOppositeDirection(redTNTLocation),
-				};
-
-				if (bitTemplateState) {
-					config.SideMode = bitTemplateState.sideCount;
-					const directionMasks: Record<string, BitDirection> = {};
-					for (const mask of bitTemplateState.masks) {
-						const key = mask.bits.join("");
-						if (mask.direction) {
-							directionMasks[key] = mask.direction as BitDirection;
-						}
-					}
-					config.DirectionMasks = directionMasks;
-					config.RedValues = bitTemplateState.sideValues
-						.map((v) => parseInt(v, 10) || 0)
-						.reverse();
-					config.IsRedArrowCenter = bitTemplateState.isSwapped;
-				}
+				const config = buildExportConfig(
+					draftConfig,
+					cannonCenter,
+					pearlMomentum,
+					redTNTLocation,
+					bitTemplateState,
+				);
 
 				await writeTextFile(path, JSON.stringify(config, null, 2));
 				setSavedPath(path);
