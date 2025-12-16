@@ -4,12 +4,13 @@ import { revealItemInDir } from "@tauri-apps/plugin-opener";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 import { useCalculatorState } from "@/context/CalculatorStateContext";
 import { useConfig } from "@/context/ConfigContext";
 import { useConfigurationState } from "@/context/ConfigurationStateContext";
+import { useToastNotifications } from "@/hooks/use-toast-notifications";
 import { inputStateToConfig } from "@/lib/bit-template-utils";
 import { buildExportConfig, convertDraftToConfig } from "@/lib/config-utils";
+import { encodeConfig, type EncodableConfig } from "@/lib/config-codec";
 
 export function useConfigurationController() {
 	const navigate = useNavigate();
@@ -28,6 +29,7 @@ export function useConfigurationController() {
 	} = useConfigurationState();
 	const { setConfigData, setHasConfig, setBitTemplateConfig } = useConfig();
 	const { updateDefaultInput } = useCalculatorState();
+	const { showSuccess, showError } = useToastNotifications();
 
 	const [savedPath, setSavedPath] = useState<string | null>(null);
 	const [shouldRestoreLastPage, setShouldRestoreLastPage] = useState(false);
@@ -182,11 +184,11 @@ export function useConfigurationController() {
 
 				await writeTextFile(path, JSON.stringify(config, null, 2));
 				setSavedPath(path);
-				toast.success("Configuration exported successfully");
+				showSuccess(t("configuration_page.toast_exported"));
 			}
 		} catch (error) {
 			console.error(error);
-			toast.error("Failed to export configuration");
+			showError(t("error.export_config"));
 		}
 	};
 
@@ -196,8 +198,27 @@ export function useConfigurationController() {
 				await revealItemInDir(savedPath);
 			} catch (error) {
 				console.error(error);
-				toast.error("Failed to open folder");
+				showError(t("error.open_folder"));
 			}
+		}
+	};
+
+	const handleCopyEncodedConfig = async () => {
+		try {
+			const config = buildExportConfig(
+				draftConfig,
+				cannonCenter,
+				pearlMomentum,
+				redTNTLocation,
+				bitTemplateState,
+			);
+			const encoded = encodeConfig(config as unknown as EncodableConfig);
+			const { calculatorService } = await import("@/services");
+			await calculatorService.copyToClipboard(encoded);
+			showSuccess(t("configuration_page.toast_code_copied"));
+		} catch (error) {
+			console.error(error);
+			showError(t("error.copy_code"));
 		}
 	};
 
@@ -215,5 +236,6 @@ export function useConfigurationController() {
 		handleExport,
 		handleOpenFolder,
 		handleApplyToCalculator,
+		handleCopyEncodedConfig,
 	};
 }

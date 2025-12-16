@@ -29,6 +29,7 @@ export default function TNTCalculationForm({
 	onInputChange,
 }: TNTCalculationFormProps) {
 	const { t } = useTranslation();
+
 	return (
 		<ScrollArea className="h-full">
 			<div className="pl-1 pr-3">
@@ -126,3 +127,4 @@ export default function TNTCalculationForm({
 		</ScrollArea>
 	);
 }
+

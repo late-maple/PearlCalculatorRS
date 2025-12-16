@@ -33,4 +33,12 @@ export class WebCalculatorService implements ICalculatorService {
 		)) as unknown as Promise<PearlCalculatorWasm>;
 		return (await wasm).calculate_raw_trace(input);
 	}
+
+	async copyToClipboard(text: string): Promise<void> {
+		await navigator.clipboard.writeText(text);
+	}
+
+	async readFromClipboard(): Promise<string> {
+		return await navigator.clipboard.readText();
+	}
 }

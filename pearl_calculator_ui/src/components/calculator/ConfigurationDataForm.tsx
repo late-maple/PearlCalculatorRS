@@ -1,5 +1,7 @@
+import { Share } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { CompactInput } from "@/components/configuration/CompactInput";
+import { Button } from "@/components/ui/button";
 import { FieldLegend, FieldSet } from "@/components/ui/field";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -10,6 +12,15 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { useConfig } from "@/context/ConfigContext";
+import { useToastNotifications } from "@/hooks/use-toast-notifications";
+import { buildEncodableConfig, encodeConfig } from "@/lib/config-codec";
 import { cn } from "@/lib/utils";
 import type { GeneralConfig } from "@/types/domain";
 
@@ -65,9 +76,24 @@ export default function ConfigurationDataForm({
 	onCannonYChange,
 }: ConfigurationDataFormProps) {
 	const { t } = useTranslation();
+	const { bitTemplateConfig } = useConfig();
+	const { showSuccess, showError } = useToastNotifications();
 	const baseY = Math.floor(config.pearl_y_position);
 	const yOffset = (parseFloat(cannonYDisplay) || baseY) - baseY;
 	const alignedLabelClass = "w-8 text-right pr-1 text-[10px] uppercase";
+
+	const handleCopyCode = async () => {
+		try {
+			const encodable = buildEncodableConfig(config, bitTemplateConfig);
+			const encoded = encodeConfig(encodable);
+			const { calculatorService } = await import("@/services");
+			await calculatorService.copyToClipboard(encoded);
+			showSuccess(t("configuration_page.toast_code_copied"));
+		} catch (error) {
+			console.error(error);
+			showError(t("error.copy_code"));
+		}
+	};
 
 	const getOppositeDirection = (
 		dir: string,
@@ -110,15 +136,34 @@ export default function ConfigurationDataForm({
 		<ScrollArea className="h-full">
 			<div className="pl-1 pr-3">
 				<FieldSet className="w-full space-y-3 pb-4">
-					<FieldLegend className="text-lg font-semibold flex items-center gap-2">
-						{t("calculator.configuration_legend")}
-						{yOffset !== 0 && (
-							<span className="text-xs font-normal text-muted-foreground">
-								{t("calculator.y_offset", {
-									offset: (yOffset > 0 ? "+" : "") + yOffset,
-								})}
-							</span>
-						)}
+					<FieldLegend className="text-lg font-semibold flex items-center justify-between w-full">
+						<div className="flex items-center gap-2">
+							{t("calculator.configuration_legend")}
+							{yOffset !== 0 && (
+								<span className="text-xs font-normal text-muted-foreground">
+									{t("calculator.y_offset", {
+										offset: (yOffset > 0 ? "+" : "") + yOffset,
+									})}
+								</span>
+							)}
+						</div>
+						<TooltipProvider>
+							<Tooltip>
+								<TooltipTrigger asChild>
+									<Button
+										variant="ghost"
+										size="icon"
+										className="h-6 w-6"
+										onClick={handleCopyCode}
+									>
+										<Share className="h-4 w-4" />
+									</Button>
+								</TooltipTrigger>
+								<TooltipContent>
+									<p>{t("calculator.copy_code_tooltip")}</p>
+								</TooltipContent>
+							</Tooltip>
+						</TooltipProvider>
 					</FieldLegend>
 
 					<div className="grid grid-cols-2 gap-x-2 gap-y-3">

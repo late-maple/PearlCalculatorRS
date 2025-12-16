@@ -2,6 +2,7 @@ import {
 	Calculator,
 	ChevronLeft,
 	ChevronRight,
+	ClipboardCopy,
 	FilePlus,
 	FolderOpen,
 	OctagonAlert,
@@ -57,6 +58,7 @@ export default function Configuration() {
 		handleExport,
 		handleOpenFolder,
 		handleApplyToCalculator,
+		handleCopyEncodedConfig,
 	} = useConfigurationController();
 
 	React.useEffect(() => {
@@ -128,6 +130,14 @@ export default function Configuration() {
 							{t("configuration_page.open_folder_btn")}
 						</Button>
 					)}
+					<Button
+						variant="outline"
+						className="w-full gap-2"
+						onClick={handleCopyEncodedConfig}
+					>
+						<ClipboardCopy className="h-4 w-4" />
+						{t("configuration_page.copy_code_btn")}
+					</Button>
 					<Button
 						variant="outline"
 						className="w-full gap-2"

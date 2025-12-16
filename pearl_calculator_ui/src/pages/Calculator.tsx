@@ -19,6 +19,7 @@ import { useTNTCalculator } from "@/hooks/use-calculator";
 import { usePearlTrace } from "@/hooks/use-pearl-trace";
 import { useToastNotifications } from "@/hooks/use-toast-notifications";
 import { loadConfiguration } from "@/lib/config-service";
+import { decodeConfig } from "@/lib/config-codec";
 import type { CalculatorInputs } from "@/types/domain";
 
 export default function Calculator() {
@@ -90,6 +91,32 @@ export default function Calculator() {
 		}
 	};
 
+	const handleImportFromClipboard = async () => {
+		try {
+			const { calculatorService } = await import("@/services");
+			const text = await calculatorService.readFromClipboard();
+			const decoded = decodeConfig(text.trim());
+			setConfigData(decoded.generalConfig);
+			setBitTemplateConfig(decoded.bitTemplate);
+			setConfigPath("");
+			setHasConfig(true);
+
+			updateDefaultInput("pearlX", decoded.generalConfig.pearl_x_position.toString());
+			updateDefaultInput("pearlZ", decoded.generalConfig.pearl_z_position.toString());
+			updateDefaultInput(
+				"cannonY",
+				Math.floor(decoded.generalConfig.pearl_y_position).toString(),
+			);
+			updateDefaultInput("offsetX", (decoded.generalConfig.offset_x ?? 0).toString());
+			updateDefaultInput("offsetZ", (decoded.generalConfig.offset_z ?? 0).toString());
+
+			showSuccess(t("calculator.toast_code_imported"));
+		} catch (e) {
+			console.error("Import from clipboard error:", e);
+			showError(t("calculator.toast_code_import_failed"), e);
+		}
+	};
+
 	const handleRunCalculation = async () => {
 		const result = await calculate(inputs, configData, version);
 
@@ -134,6 +161,9 @@ export default function Calculator() {
 			>
 				<Button className="w-48" onClick={handleImport}>
 					{t("calculator.import_config_btn")}
+				</Button>
+				<Button className="w-48" variant="outline" onClick={handleImportFromClipboard}>
+					{t("calculator.import_code_btn")}
 				</Button>
 				<Button
 					className="w-48"

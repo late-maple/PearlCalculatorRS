@@ -109,7 +109,11 @@
 			"bit_validation_gap": "检测到断层：在累加和为 {{sum}} 时无法覆盖 {{gap}}",
 			"bit_validation_invalid": "模板值无效",
 			"bit_value_exceeds": "数值 {{value}} 超出最大范围 {{max}}",
-			"side_mode": "位数"
+			"side_mode": "位数",
+			"import_code_btn": "导入代码",
+			"toast_code_imported": "已从代码导入配置",
+			"toast_code_import_failed": "无效的编码格式",
+			"copy_code_tooltip": "复制神秘代码"
 		},
 		"simulator": {
 			"configuration_title": "模拟器配置",
@@ -179,7 +183,21 @@
 			"sw_short": "西南",
 			"se_short": "东南",
 			"label_amount": "数量",
-			"color_blue": "蓝组 TNT"
+			"color_blue": "蓝组 TNT",
+			"copy_code_btn": "复制神秘代码",
+			"toast_code_copied": "神秘代码已复制到剪贴板",
+			"toast_exported": "配置已成功导出"
+		},
+		"error": {
+			"config": {
+				"unexpected_end": "数据意外结束",
+				"no_valid_code": "未找到有效代码",
+				"checksum_mismatch": "校验和不匹配"
+			},
+			"export_config": "导出配置失败",
+			"open_folder": "打开文件夹失败",
+			"copy_code": "复制代码失败",
+			"pearl_trace": "珍珠轨迹计算错误"
 		}
 	}
 }

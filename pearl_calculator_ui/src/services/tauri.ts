@@ -1,4 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
+import { writeText, readText } from "@tauri-apps/plugin-clipboard-manager";
 import type { PearlTraceResult, TNTResult } from "@/types/domain";
 import type {
 	CalculationInput,
@@ -18,5 +19,13 @@ export class TauriCalculatorService implements ICalculatorService {
 
 	async calculateRawTrace(input: RawTraceInput): Promise<PearlTraceResult> {
 		return invoke<PearlTraceResult>("calculate_raw_trace_command", { input });
+	}
+
+	async copyToClipboard(text: string): Promise<void> {
+		await writeText(text);
+	}
+
+	async readFromClipboard(): Promise<string> {
+		return await readText();
 	}
 }

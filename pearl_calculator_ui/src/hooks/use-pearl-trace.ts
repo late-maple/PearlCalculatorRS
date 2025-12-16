@@ -1,8 +1,10 @@
+import { useTranslation } from "react-i18next";
 import { useToastNotifications } from "@/hooks/use-toast-notifications";
 import { calculatorService } from "@/services";
 import type { GeneralConfig, PearlTraceResult } from "@/types/domain";
 
 export function usePearlTrace() {
+	const { t } = useTranslation();
 	const { showError } = useToastNotifications();
 
 	const calculatePearlTrace = async (
@@ -50,7 +52,7 @@ export function usePearlTrace() {
 			return result;
 		} catch (error) {
 			console.error("Pearl trace calculation failed:", error);
-			showError("Pearl Trace Error", error);
+			showError(t("error.pearl_trace"), error);
 			return null;
 		}
 	};

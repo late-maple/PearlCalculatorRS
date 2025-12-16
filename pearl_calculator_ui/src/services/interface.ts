@@ -76,4 +76,6 @@ export interface ICalculatorService {
 	calculateTNTAmount(input: CalculationInput): Promise<TNTResult[]>;
 	calculatePearlTrace(input: PearlTraceInput): Promise<PearlTraceResult>;
 	calculateRawTrace(input: RawTraceInput): Promise<PearlTraceResult>;
+	copyToClipboard(text: string): Promise<void>;
+	readFromClipboard(): Promise<string>;
 }

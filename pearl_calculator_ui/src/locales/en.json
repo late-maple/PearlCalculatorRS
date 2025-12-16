@@ -109,7 +109,11 @@
 			"bit_validation_gap": "Gap detected: cannot cover {{gap}} after sum {{sum}}",
 			"bit_validation_invalid": "Invalid template values",
 			"bit_value_exceeds": "Value {{value}} exceeds maximum {{max}}",
-			"side_mode": "Side Mode"
+			"side_mode": "Side Mode",
+			"import_code_btn": "Import Code",
+			"toast_code_imported": "Configuration imported from code",
+			"toast_code_import_failed": "Invalid code format",
+			"copy_code_tooltip": "Copy configuration code"
 		},
 		"simulator": {
 			"configuration_title": "Simulator Configuration",
@@ -179,7 +183,21 @@
 			"sw_short": "South West",
 			"se_short": "South East",
 			"label_amount": "Amount",
-			"color_blue": "Blue"
+			"color_blue": "Blue",
+			"copy_code_btn": "Copy Code",
+			"toast_code_copied": "Code copied to clipboard",
+			"toast_exported": "Configuration exported successfully"
+		},
+		"error": {
+			"config": {
+				"unexpected_end": "Unexpected end of data",
+				"no_valid_code": "No valid code found",
+				"checksum_mismatch": "Checksum mismatch"
+			},
+			"export_config": "Failed to export configuration",
+			"open_folder": "Failed to open folder",
+			"copy_code": "Failed to copy code",
+			"pearl_trace": "Pearl Trace Error"
 		}
 	}
 }
