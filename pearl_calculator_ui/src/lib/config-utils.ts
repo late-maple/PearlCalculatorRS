@@ -29,6 +29,7 @@ export interface CannonCenter {
 
 export interface PearlMomentum {
 	x: string;
+	y: string;
 	z: string;
 }
 
@@ -149,4 +150,51 @@ export function buildExportConfig(
 	}
 
 	return config;
+}
+
+export function convertConfigToDraft(config: GeneralConfig): {
+	draft: DraftConfig;
+	center: CannonCenter;
+	momentum: PearlMomentum;
+	redLocation: string | undefined;
+} {
+	const center = { x: "0", z: "0" };
+
+	const momentum = {
+		x: "0",
+		y: config.pearl_y_motion.toString(),
+		z: "0",
+	};
+
+	const redLocation = config.default_red_tnt_position;
+
+	const draft: DraftConfig = {
+		max_tnt: config.max_tnt.toString(),
+		north_west_tnt: {
+			x: config.north_west_tnt.x.toString(),
+			y: config.north_west_tnt.y.toString(),
+			z: config.north_west_tnt.z.toString(),
+		},
+		north_east_tnt: {
+			x: config.north_east_tnt.x.toString(),
+			y: config.north_east_tnt.y.toString(),
+			z: config.north_east_tnt.z.toString(),
+		},
+		south_west_tnt: {
+			x: config.south_west_tnt.x.toString(),
+			y: config.south_west_tnt.y.toString(),
+			z: config.south_west_tnt.z.toString(),
+		},
+		south_east_tnt: {
+			x: config.south_east_tnt.x.toString(),
+			y: config.south_east_tnt.y.toString(),
+			z: config.south_east_tnt.z.toString(),
+		},
+		pearl_x_position: config.pearl_x_position.toString(),
+		pearl_y_position: config.pearl_y_position.toString(),
+		pearl_z_position: config.pearl_z_position.toString(),
+		pearl_y_motion: config.pearl_y_motion.toString(),
+	};
+
+	return { draft, center, momentum, redLocation };
 }

@@ -113,7 +113,8 @@
 			"import_code_btn": "导入代码",
 			"toast_code_imported": "已从代码导入配置",
 			"toast_code_import_failed": "无效的编码格式",
-			"copy_code_tooltip": "复制神秘代码"
+			"copy_code_tooltip": "复制神秘代码",
+			"export_json_tooltip": "导出 JSON 文件"
 		},
 		"simulator": {
 			"configuration_title": "模拟器配置",
@@ -132,6 +133,9 @@
 			"title": "创建配置",
 			"description": "开始创建新的 FTL 配置",
 			"start_btn": "开始配置",
+			"import_clipboard_btn": "从剪贴板编辑",
+			"import_file_btn": "从文件编辑",
+			"toast_imported": "配置导入成功",
 			"completed_title": "已完成",
 			"completed_desc": "配置已创建，请选择导出位置",
 			"export_btn": "导出配置",

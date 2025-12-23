@@ -1,10 +1,11 @@
-import { open } from "@tauri-apps/plugin-dialog";
-import { readTextFile } from "@tauri-apps/plugin-fs";
+import { open, save } from "@tauri-apps/plugin-dialog";
+import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
 import type {
 	BitDirection,
 	BitTemplateConfig,
 	GeneralConfig,
 } from "@/types/domain";
+import { isTauri } from "@/services";
 
 interface DirtyConfig {
 	Version?: string;
@@ -141,7 +142,6 @@ export async function loadConfiguration(): Promise<{
 	bitTemplate: BitTemplateConfig | null;
 	path: string;
 } | null> {
-	const isTauri = typeof window !== "undefined" && "__TAURI__" in window;
 
 	try {
 		if (isTauri) {
@@ -185,6 +185,37 @@ export async function loadConfiguration(): Promise<{
 		}
 	} catch (error) {
 		console.error("Config load failed", error);
+		throw error;
+	}
+	return null;
+}
+
+export async function exportConfiguration(config: any): Promise<string | null> {
+	try {
+		if (isTauri) {
+			const path = await save({
+				filters: [{ name: "JSON", extensions: ["json"] }],
+			});
+
+			if (path) {
+				await writeTextFile(path, JSON.stringify(config, null, 2));
+				return path;
+			}
+		} else {
+			const content = JSON.stringify(config, null, 2);
+			const blob = new Blob([content], { type: "application/json" });
+			const url = URL.createObjectURL(blob);
+			const a = document.createElement("a");
+			a.href = url;
+			a.download = "config.json";
+			document.body.appendChild(a);
+			a.click();
+			document.body.removeChild(a);
+			URL.revokeObjectURL(url);
+			return "config.json";
+		}
+	} catch (error) {
+		console.error("Config export failed", error);
 		throw error;
 	}
 	return null;

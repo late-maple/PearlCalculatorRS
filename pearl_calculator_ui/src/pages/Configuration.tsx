@@ -37,6 +37,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useConfigurationController } from "@/hooks/use-configuration-controller";
+import { isTauri } from "@/services";
 
 export default function Configuration() {
 	const [api, setApi] = React.useState<CarouselApi>();
@@ -59,6 +60,8 @@ export default function Configuration() {
 		handleOpenFolder,
 		handleApplyToCalculator,
 		handleCopyEncodedConfig,
+		handleImportFromClipboard,
+		handleImportFromFile,
 	} = useConfigurationController();
 
 	React.useEffect(() => {
@@ -101,9 +104,25 @@ export default function Configuration() {
 				title={t("configuration_page.title")}
 				description={t("configuration_page.description")}
 			>
-				<Button className="w-48" onClick={handleStart}>
-					{t("configuration_page.start_btn")}
-				</Button>
+				<div className="flex flex-col gap-2 w-48">
+					<Button className="w-full" onClick={handleStart}>
+						{t("configuration_page.start_btn")}
+					</Button>
+					<Button
+						variant="outline"
+						className="w-full"
+						onClick={handleImportFromClipboard}
+					>
+						{t("configuration_page.import_clipboard_btn")}
+					</Button>
+					<Button
+						variant="outline"
+						className="w-full"
+						onClick={handleImportFromFile}
+					>
+						{t("configuration_page.import_file_btn")}
+					</Button>
+				</div>
 			</OnboardingPanel>
 		);
 	}
@@ -120,7 +139,7 @@ export default function Configuration() {
 						<Save className="h-4 w-4" />
 						{t("configuration_page.export_btn")}
 					</Button>
-					{savedPath && (
+					{savedPath && isTauri && (
 						<Button
 							variant="outline"
 							className="w-full gap-2"

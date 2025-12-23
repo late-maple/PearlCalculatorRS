@@ -1,4 +1,4 @@
-import { Share } from "lucide-react";
+import { Save, Share } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { CompactInput } from "@/components/configuration/CompactInput";
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,7 @@ import {
 import { useConfig } from "@/context/ConfigContext";
 import { useToastNotifications } from "@/hooks/use-toast-notifications";
 import { buildEncodableConfig, encodeConfig } from "@/lib/config-codec";
+import { exportConfiguration } from "@/lib/config-service";
 import { cn } from "@/lib/utils";
 import type { GeneralConfig } from "@/types/domain";
 
@@ -95,6 +96,17 @@ export default function ConfigurationDataForm({
 		}
 	};
 
+	const handleExportConfig = async () => {
+		try {
+			const encodable = buildEncodableConfig(config, bitTemplateConfig);
+			await exportConfiguration(encodable);
+			showSuccess(t("configuration_page.toast_exported"));
+		} catch (error) {
+			console.error(error);
+			showError(t("error.export_config"));
+		}
+	};
+
 	const getOppositeDirection = (
 		dir: string,
 	): "SouthEast" | "NorthWest" | "SouthWest" | "NorthEast" => {
@@ -147,23 +159,41 @@ export default function ConfigurationDataForm({
 								</span>
 							)}
 						</div>
-						<TooltipProvider>
-							<Tooltip>
-								<TooltipTrigger asChild>
-									<Button
-										variant="ghost"
-										size="icon"
-										className="h-6 w-6"
-										onClick={handleCopyCode}
-									>
-										<Share className="h-4 w-4" />
-									</Button>
-								</TooltipTrigger>
-								<TooltipContent>
-									<p>{t("calculator.copy_code_tooltip")}</p>
-								</TooltipContent>
-							</Tooltip>
-						</TooltipProvider>
+						<div className="flex items-center gap-1">
+							<TooltipProvider delayDuration={0}>
+								<Tooltip>
+									<TooltipTrigger asChild>
+										<Button
+											variant="ghost"
+											size="icon"
+											className="h-6 w-6"
+											onClick={handleExportConfig}
+										>
+											<Save className="h-4 w-4" />
+										</Button>
+									</TooltipTrigger>
+									<TooltipContent>
+										<p>{t("configuration_page.export_btn")}</p>
+									</TooltipContent>
+								</Tooltip>
+
+								<Tooltip>
+									<TooltipTrigger asChild>
+										<Button
+											variant="ghost"
+											size="icon"
+											className="h-6 w-6"
+											onClick={handleCopyCode}
+										>
+											<Share className="h-4 w-4" />
+										</Button>
+									</TooltipTrigger>
+									<TooltipContent>
+										<p>{t("calculator.copy_code_tooltip")}</p>
+									</TooltipContent>
+								</Tooltip>
+							</TooltipProvider>
+						</div>
 					</FieldLegend>
 
 					<div className="grid grid-cols-2 gap-x-2 gap-y-3">

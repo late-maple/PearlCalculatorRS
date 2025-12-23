@@ -113,7 +113,8 @@
 			"import_code_btn": "Import Code",
 			"toast_code_imported": "Configuration imported from code",
 			"toast_code_import_failed": "Invalid code format",
-			"copy_code_tooltip": "Copy configuration code"
+			"copy_code_tooltip": "Copy configuration code",
+			"export_json_tooltip": "Export as JSON file"
 		},
 		"simulator": {
 			"configuration_title": "Simulator Configuration",
@@ -132,6 +133,9 @@
 			"title": "Create Configuration",
 			"description": "Start creating a new FTL configuration.",
 			"start_btn": "Start Configuration",
+			"import_clipboard_btn": "Edit from Clipboard",
+			"import_file_btn": "Edit from File",
+			"toast_imported": "Configuration imported successfully",
 			"completed_title": "Completed",
 			"completed_desc": "Configuration created. Select export location.",
 			"export_btn": "Export Configuration",
@@ -197,6 +201,8 @@
 			"export_config": "Failed to export configuration",
 			"open_folder": "Failed to open folder",
 			"copy_code": "Failed to copy code",
+			"clipboard_empty": "Clipboard is empty or invalid",
+			"import_failed": "Failed to import configuration",
 			"pearl_trace": "Pearl Trace Error"
 		}
 	}

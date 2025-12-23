@@ -1,5 +1,3 @@
-import { save } from "@tauri-apps/plugin-dialog";
-import { writeTextFile } from "@tauri-apps/plugin-fs";
 import { revealItemInDir } from "@tauri-apps/plugin-opener";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -8,9 +6,12 @@ import { useCalculatorState } from "@/context/CalculatorStateContext";
 import { useConfig } from "@/context/ConfigContext";
 import { useConfigurationState } from "@/context/ConfigurationStateContext";
 import { useToastNotifications } from "@/hooks/use-toast-notifications";
-import { inputStateToConfig } from "@/lib/bit-template-utils";
-import { buildExportConfig, convertDraftToConfig } from "@/lib/config-utils";
-import { encodeConfig, type EncodableConfig } from "@/lib/config-codec";
+import { inputStateToConfig, configToInputState } from "@/lib/bit-template-utils";
+import { buildExportConfig, convertDraftToConfig, convertConfigToDraft } from "@/lib/config-utils";
+import { exportConfiguration, loadConfiguration } from "@/lib/config-service";
+import { decodeConfig, encodeConfig, type EncodableConfig } from "@/lib/config-codec";
+import { isTauri } from "@/services";
+import type { BitTemplateConfig, GeneralConfig } from "@/types/domain";
 
 export function useConfigurationController() {
 	const navigate = useNavigate();
@@ -26,6 +27,11 @@ export function useConfigurationController() {
 		setIsWizardActive,
 		isFinished,
 		setIsFinished,
+		setDraftConfig,
+		setCannonCenter,
+		setPearlMomentum,
+		setRedTNTLocation,
+		setBitTemplateState,
 	} = useConfigurationState();
 	const { setConfigData, setHasConfig, setBitTemplateConfig } = useConfig();
 	const { updateDefaultInput } = useCalculatorState();
@@ -169,20 +175,15 @@ export function useConfigurationController() {
 
 	const handleExport = async () => {
 		try {
-			const path = await save({
-				filters: [{ name: "JSON", extensions: ["json"] }],
-			});
-
+			const config = buildExportConfig(
+				draftConfig,
+				cannonCenter,
+				pearlMomentum,
+				redTNTLocation,
+				bitTemplateState,
+			);
+			const path = await exportConfiguration(config);
 			if (path) {
-				const config = buildExportConfig(
-					draftConfig,
-					cannonCenter,
-					pearlMomentum,
-					redTNTLocation,
-					bitTemplateState,
-				);
-
-				await writeTextFile(path, JSON.stringify(config, null, 2));
 				setSavedPath(path);
 				showSuccess(t("configuration_page.toast_exported"));
 			}
@@ -193,13 +194,60 @@ export function useConfigurationController() {
 	};
 
 	const handleOpenFolder = async () => {
-		if (savedPath) {
+		if (savedPath && isTauri) {
 			try {
 				await revealItemInDir(savedPath);
 			} catch (error) {
 				console.error(error);
 				showError(t("error.open_folder"));
 			}
+		}
+	};
+
+	const hydrateWizard = (
+		config: GeneralConfig,
+		bitTemplate: BitTemplateConfig | null,
+	) => {
+		const { draft, center, momentum, redLocation } = convertConfigToDraft(config);
+		setDraftConfig(draft);
+		setCannonCenter(center);
+		setPearlMomentum(momentum);
+		setRedTNTLocation(redLocation);
+
+		const bitInput = configToInputState(bitTemplate);
+		setBitTemplateState(bitInput);
+
+		setIsWizardActive(true);
+	};
+
+	const handleImportFromClipboard = async () => {
+		try {
+			const { calculatorService } = await import("@/services");
+			const text = await calculatorService.readFromClipboard();
+			if (!text) {
+				showError(t("error.clipboard_empty"));
+				return;
+			}
+			const decoded = decodeConfig(text);
+			hydrateWizard(decoded.generalConfig, decoded.bitTemplate);
+			showSuccess(t("configuration_page.toast_imported"));
+		} catch (error) {
+			console.error(error);
+			showError(t("calculator.toast_code_import_failed"), error);
+		}
+	};
+
+	const handleImportFromFile = async () => {
+		try {
+			const result = await loadConfiguration();
+			if (result) {
+				hydrateWizard(result.config, result.bitTemplate);
+				setSavedPath(result.path);
+				showSuccess(t("configuration_page.toast_imported"));
+			}
+		} catch (error) {
+			console.error(error);
+			showError(t("error.import_failed"));
 		}
 	};
 
@@ -237,5 +285,7 @@ export function useConfigurationController() {
 		handleOpenFolder,
 		handleApplyToCalculator,
 		handleCopyEncodedConfig,
+		handleImportFromClipboard,
+		handleImportFromFile,
 	};
 }
