@@ -47,9 +47,9 @@ export function AppBreadcrumb() {
 					active: !showPearlTrace,
 					onClick: showPearlTrace
 						? () => {
-								updateBitCalculation({ show: false });
-								updateDefaultTrace({ show: false });
-							}
+							updateBitCalculation({ show: false });
+							updateDefaultTrace({ show: false });
+						}
 						: undefined,
 				});
 				if (showPearlTrace) {
@@ -88,7 +88,12 @@ export function AppBreadcrumb() {
 					label: t("breadcrumb.configuration"),
 					href: "/configuration",
 					active: !isWizardActive,
-					onClick: isWizardActive ? () => setIsWizardActive(false) : undefined,
+					onClick: isWizardActive
+						? () => {
+							setIsWizardActive(false);
+							setIsFinished(false);
+						}
+						: undefined,
 				},
 			];
 
@@ -101,7 +106,7 @@ export function AppBreadcrumb() {
 				});
 			}
 
-			if (isFinished) {
+			if (isWizardActive && isFinished) {
 				crumbs.push({
 					label: t("breadcrumb.completed"),
 					active: true,
