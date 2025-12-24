@@ -125,7 +125,7 @@
 			"title": "创建配置",
 			"description": "开始创建新的 FTL 配置",
 			"start_btn": "开始配置",
-			"import_clipboard_btn": "从剪贴板编辑",
+			"import_clipboard_btn": "从神秘代码编辑",
 			"import_file_btn": "从文件编辑",
 			"toast_imported": "配置导入成功",
 			"completed_title": "已完成",

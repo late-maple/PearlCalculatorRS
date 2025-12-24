@@ -125,7 +125,7 @@
 			"title": "Create Configuration",
 			"description": "Start creating a new FTL configuration.",
 			"start_btn": "Start Configuration",
-			"import_clipboard_btn": "Edit from Clipboard",
+			"import_clipboard_btn": "Edit from Code",
 			"import_file_btn": "Edit from File",
 			"toast_imported": "Configuration imported successfully",
 			"completed_title": "Completed",
