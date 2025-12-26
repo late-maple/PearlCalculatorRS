@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { useBreadcrumbItems } from "@/hooks/use-breadcrumb-items";
+import { AppInfo } from "./AppInfo";
 
 export function AppBreadcrumb() {
 	const navigate = useNavigate();
@@ -29,7 +30,7 @@ export function AppBreadcrumb() {
 	};
 
 	return (
-		<div className="flex items-center gap-2">
+		<div className="flex items-center gap-2 w-full">
 			<Button
 				variant="outline"
 				className="h-6 px-2 shrink-0 gap-1"
@@ -80,6 +81,7 @@ export function AppBreadcrumb() {
 					))}
 				</BreadcrumbList>
 			</Breadcrumb>
+			<AppInfo />
 		</div>
 	);
 }
