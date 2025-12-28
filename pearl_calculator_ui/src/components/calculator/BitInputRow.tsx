@@ -19,6 +19,7 @@ interface BitInputRowProps {
 	inputRefs: React.MutableRefObject<(HTMLInputElement | null)[]>;
 	onValueChange: (index: number, value: string) => void;
 	onKeyDown: (index: number, e: React.KeyboardEvent<HTMLInputElement>) => void;
+	onPaste?: (index: number, e: React.ClipboardEvent) => void;
 }
 
 export { type ThemeColor };
@@ -32,6 +33,7 @@ export function BitInputRow({
 	inputRefs,
 	onValueChange,
 	onKeyDown,
+	onPaste,
 }: BitInputRowProps) {
 	const style = THEME_CLASSES[theme];
 	const isRightToLeft = arrowPosition === "left";
@@ -106,6 +108,7 @@ export function BitInputRow({
 												value={val}
 												onChange={(e) => onValueChange(originalIndex, e.target.value)}
 												onKeyDown={(e) => onKeyDown(originalIndex, e)}
+												onPaste={(e) => onPaste?.(originalIndex, e)}
 												className={`w-12 h-8 text-center text-xs p-0 font-mono rounded-lg bg-white shadow-sm transition-all duration-200 ${style.input}`}
 												placeholder={placeholders[originalIndex] || "0"}
 											/>

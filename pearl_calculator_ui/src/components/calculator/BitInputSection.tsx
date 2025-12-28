@@ -16,6 +16,21 @@ const DEFAULT_MASKS: MaskGroup[] = [
 	{ bits: ["1", "1"], direction: "" },
 ];
 
+function parsePastedValues(text: string): string[] | null {
+	const trimmed = text.trim();
+	if (!trimmed) return null;
+
+	if (/^(\d+\s+)+\d+$/.test(trimmed)) {
+		return trimmed.split(/\s+/);
+	}
+
+	if (/^(\d+\s*,\s*)+\d+$/.test(trimmed)) {
+		return trimmed.split(',').map(s => s.trim());
+	}
+
+	return null;
+}
+
 export type BitInputSectionState = BitInputState;
 
 interface BitInputSectionProps {
@@ -40,6 +55,7 @@ export function BitInputSection({
 		sideValues: Array(13).fill(""),
 		isSwapped: false,
 	});
+	const [, setHistory] = useState<BitInputSectionState[]>([]);
 
 	const state = value ?? internalState;
 	const setState = (newState: BitInputSectionState) => {
@@ -48,6 +64,22 @@ export function BitInputSection({
 		} else {
 			setInternalState(newState);
 		}
+	};
+
+	const saveCheckpoint = () => {
+		setHistory((prev) => [...prev, state]);
+	};
+
+	const undo = () => {
+		setHistory((prev) => {
+			if (prev.length === 0) return prev;
+			const newHistory = [...prev];
+			const previousState = newHistory.pop();
+			if (previousState) {
+				setState(previousState);
+			}
+			return newHistory;
+		});
 	};
 
 	const [inputValue, setInputValue] = useState<string>(
@@ -116,16 +148,50 @@ export function BitInputSection({
 					refs.current[index - 1]?.focus();
 				}
 			})
-			.otherwise(() => { });
+			.otherwise(() => {
+				if ((e.ctrlKey || e.metaKey) && e.key === "z") {
+					e.preventDefault();
+					undo();
+				}
+			});
+	};
+
+	const handlePaste = (
+		index: number,
+		e: React.ClipboardEvent,
+		source: "blue" | "red"
+	) => {
+		const text = e.clipboardData.getData("text");
+		const values = parsePastedValues(text);
+
+		if (!values) return;
+
+		e.preventDefault();
+		saveCheckpoint();
+
+		const newValues = [...state.sideValues];
+		const startIndex = source === "blue" ? index : state.sideCount - 1 - index;
+		const direction = source === "blue" ? 1 : -1;
+
+		values.forEach((val, i) => {
+			const targetIndex = startIndex + (i * direction);
+			if (targetIndex >= 0 && targetIndex < state.sideCount) {
+				newValues[targetIndex] = val;
+			}
+		});
+
+		setState({ ...state, sideValues: newValues });
 	};
 
 	const handleDirectionChange = (groupIndex: number, value: string) => {
+		saveCheckpoint();
 		const newMasks = [...state.masks];
 		newMasks[groupIndex] = { ...newMasks[groupIndex], direction: value };
 		setState({ ...state, masks: newMasks });
 	};
 
 	const handleSwap = () => {
+		saveCheckpoint();
 		setState({ ...state, isSwapped: !state.isSwapped });
 	};
 
@@ -184,6 +250,7 @@ export function BitInputSection({
 					inputRefs={blueRefs}
 					onValueChange={(i, v) => handleSideValueChange(i, v, "blue")}
 					onKeyDown={(i, e) => handleKeyDown(i, e, "blue")}
+					onPaste={(i, e) => handlePaste(i, e, "blue")}
 				/>
 
 				<div className="flex justify-center relative z-10">
@@ -206,6 +273,7 @@ export function BitInputSection({
 					inputRefs={redRefs}
 					onValueChange={(i, v) => handleSideValueChange(i, v, "red")}
 					onKeyDown={(i, e) => handleKeyDown(i, e, "red")}
+					onPaste={(i, e) => handlePaste(i, e, "red")}
 				/>
 			</div>
 
