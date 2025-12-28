@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/sidebar";
 import { useConfig } from "@/context/ConfigContext";
 import type { PearlVersion } from "@/types/domain";
+import { AppInfo } from "./layout/AppInfo";
 
 const items = [
 	{
@@ -69,7 +70,10 @@ export function AppSidebar() {
 		<Sidebar>
 			<SidebarContent>
 				<SidebarGroup className="pt-0">
-					<SidebarGroupLabel>{t("sidebar.title")}</SidebarGroupLabel>
+					<SidebarGroupLabel className="flex items-center gap-2 px-0 w-fit">
+						{t("sidebar.title")}
+						<AppInfo className="translate-y-0.25" />
+					</SidebarGroupLabel>
 					<SidebarGroupContent>
 						<SidebarMenu>
 							<SidebarMenuItem>

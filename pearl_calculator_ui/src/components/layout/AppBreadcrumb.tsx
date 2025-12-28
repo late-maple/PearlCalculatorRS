@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { useBreadcrumbItems } from "@/hooks/use-breadcrumb-items";
-import { AppInfo } from "./AppInfo";
 
 export function AppBreadcrumb() {
 	const navigate = useNavigate();
@@ -81,7 +80,6 @@ export function AppBreadcrumb() {
 					))}
 				</BreadcrumbList>
 			</Breadcrumb>
-			<AppInfo />
 		</div>
 	);
 }

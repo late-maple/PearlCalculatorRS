@@ -5,26 +5,27 @@ import {
 	HoverCardContent,
 	HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { Github, Info } from "lucide-react";
+import { BadgeInfo, Github } from "lucide-react";
 import pkg from "../../../package.json";
 import tauriConf from "../../../src-tauri/tauri.conf.json";
 
-export function AppInfo() {
+export function AppInfo({ className }: { className?: string }) {
 	return (
-		<div className="ml-auto mr-1">
+		<div className={className}>
 			<HoverCard openDelay={0} closeDelay={0}>
 				<HoverCardTrigger asChild>
 					<Button
 						variant="ghost"
 						size="icon"
-						className="h-8 w-8 rounded-full text-muted-foreground hover:text-foreground"
+						className="h-4 w-4 rounded-full text-muted-foreground hover:text-foreground"
 					>
-						<Info className="h-4 w-4" />
+						<BadgeInfo className="h-3.5 w-3.5" />
 					</Button>
 				</HoverCardTrigger>
 				<HoverCardContent
 					className="w-80 p-4 pb-2 rounded-xl select-none"
-					align="end"
+					align="start"
+					side="right"
 				>
 					<div className="flex flex-col gap-3">
 						<div className="flex items-center justify-between">
