@@ -24,6 +24,7 @@
 			"no_configuration": "No Configuration",
 			"import_config_desc": "Import a configuration file to start using the calculator.",
 			"import_config_btn": "Import Configuration",
+			"drop_hint": "Drop JSON file to import",
 			"skip_import": "Skip Import",
 			"tab_general": "General",
 			"tab_configuration": "Configuration",

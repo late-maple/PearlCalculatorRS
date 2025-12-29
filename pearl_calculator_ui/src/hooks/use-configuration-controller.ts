@@ -77,12 +77,13 @@ export function useConfigurationController() {
 		setBitTemplateState,
 		isBitConfigSkipped,
 		setIsBitConfigSkipped,
+		savedPath,
+		setSavedPath,
 	} = useConfigurationState();
 	const { setConfigData, setHasConfig, setBitTemplateConfig } = useConfig();
 	const { updateDefaultInput } = useCalculatorState();
 	const { showSuccess, showError } = useToastNotifications();
 
-	const [savedPath, setSavedPath] = useState<string | null>(null);
 	const [shouldRestoreLastPage, setShouldRestoreLastPage] = useState(false);
 	const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -273,6 +274,7 @@ export function useConfigurationController() {
 	const hydrateWizard = (
 		config: GeneralConfig,
 		bitTemplate: BitTemplateConfig | null,
+		path: string | null = null,
 	) => {
 		const { draft, center, momentum, redLocation } =
 			convertConfigToDraft(config);
@@ -283,6 +285,14 @@ export function useConfigurationController() {
 
 		const bitInput = configToInputState(bitTemplate);
 		setBitTemplateState(bitInput);
+
+		setBitTemplateState(bitInput);
+
+		if (path) {
+			setSavedPath(path);
+		} else {
+			setSavedPath(null);
+		}
 
 		setIsWizardActive(true);
 	};
@@ -307,8 +317,7 @@ export function useConfigurationController() {
 		try {
 			const result = await loadConfiguration();
 			if (result) {
-				hydrateWizard(result.config, result.bitTemplate);
-				setSavedPath(result.path);
+				hydrateWizard(result.config, result.bitTemplate, result.path);
 			}
 		} catch (error) {
 			console.error(error);

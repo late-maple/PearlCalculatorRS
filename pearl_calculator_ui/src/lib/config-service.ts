@@ -134,6 +134,23 @@ function extractBitTemplateConfig(
 	return BitTemplateConfigSchema.parse(template);
 }
 
+export function parseConfigurationContent(
+	content: string,
+	path: string,
+): {
+	config: GeneralConfig;
+	bitTemplate: BitTemplateConfig | null;
+	path: string;
+} {
+	const json = JSON.parse(content);
+	const dirty = LooseConfigSchema.parse(json);
+
+	const cleanConfig = normalizeConfig(dirty);
+	const bitTemplate = extractBitTemplateConfig(dirty);
+
+	return { config: cleanConfig, bitTemplate, path };
+}
+
 export async function loadConfiguration(): Promise<{
 	config: GeneralConfig;
 	bitTemplate: BitTemplateConfig | null;
@@ -148,13 +165,7 @@ export async function loadConfiguration(): Promise<{
 
 			if (selected && typeof selected === "string") {
 				const content = await readTextFile(selected);
-				const json = JSON.parse(content);
-				const dirty = LooseConfigSchema.parse(json);
-
-				const cleanConfig = normalizeConfig(dirty);
-				const bitTemplate = extractBitTemplateConfig(dirty);
-
-				return { config: cleanConfig, bitTemplate, path: selected };
+				return parseConfigurationContent(content, selected);
 			}
 		} else {
 			return new Promise((resolve, reject) => {
@@ -166,12 +177,7 @@ export async function loadConfiguration(): Promise<{
 						const file = (e.target as HTMLInputElement).files?.[0];
 						if (file) {
 							const content = await file.text();
-							const json = JSON.parse(content);
-							const dirty = LooseConfigSchema.parse(json);
-
-							const cleanConfig = normalizeConfig(dirty);
-							const bitTemplate = extractBitTemplateConfig(dirty);
-							resolve({ config: cleanConfig, bitTemplate, path: file.name });
+							resolve(parseConfigurationContent(content, file.name));
 						} else {
 							resolve(null);
 						}

@@ -24,6 +24,7 @@
 			"no_configuration": "无配置",
 			"import_config_desc": "导入配置文件以开始使用计算器。",
 			"import_config_btn": "导入配置",
+			"drop_hint": "拖放 JSON 文件以导入",
 			"skip_import": "跳过导入",
 			"tab_general": "常规",
 			"tab_configuration": "配置",

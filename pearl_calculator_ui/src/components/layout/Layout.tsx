@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "motion/react";
 import { Outlet, useLocation } from "react-router-dom";
+import { DragDropOverlay } from "@/components/common/DragDropOverlay";
 import { AppSidebar } from "@/components/app-sidebar";
 import { AppBreadcrumb } from "@/components/layout/AppBreadcrumb";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -8,6 +9,7 @@ export default function Layout() {
 	const location = useLocation();
 	return (
 		<SidebarProvider>
+			<DragDropOverlay />
 			<AppSidebar />
 			<main className="w-full h-screen flex flex-col overflow-hidden">
 				<header className="flex h-12 shrink-0 items-center gap-2 px-4 pt-1 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">

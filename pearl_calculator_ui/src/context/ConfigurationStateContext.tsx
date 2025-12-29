@@ -42,6 +42,8 @@ interface ConfigurationStateContextType {
 	setIsFinished: (finished: boolean) => void;
 	isBitConfigSkipped: boolean;
 	setIsBitConfigSkipped: (skipped: boolean) => void;
+	savedPath: string | null;
+	setSavedPath: (path: string | null) => void;
 	resetDraft: () => void;
 }
 
@@ -66,6 +68,7 @@ export function ConfigurationStateProvider({
 
 	const [isWizardActive, setIsWizardActive] = useState(false);
 	const [isFinished, setIsFinished] = useState(false);
+	const [savedPath, setSavedPath] = useState<string | null>(null);
 	const [isBitConfigSkipped, setIsBitConfigSkipped] = useState(false);
 
 	const resetDraft = () => {
@@ -75,6 +78,7 @@ export function ConfigurationStateProvider({
 		setRedTNTLocation(undefined);
 		setBitTemplateState(undefined);
 		setIsBitConfigSkipped(false);
+		setSavedPath(null);
 		setIsWizardActive(false);
 		setIsFinished(false);
 	};
@@ -98,6 +102,8 @@ export function ConfigurationStateProvider({
 				setIsFinished,
 				isBitConfigSkipped,
 				setIsBitConfigSkipped,
+				savedPath,
+				setSavedPath,
 				resetDraft,
 			}}
 		>
