@@ -45,8 +45,6 @@ pub struct CannonSettings {
     pub south_west_tnt: Space3D,
     #[serde(rename = "SouthEastTNT")]
     pub south_east_tnt: Space3D,
-    #[serde(default)]
-    pub tnt_per_accumulation: Option<u32>,
     pub offset: Surface2D,
     pub pearl: PearlInfo,
 }

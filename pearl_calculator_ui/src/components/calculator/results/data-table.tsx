@@ -8,6 +8,7 @@ import {
 	getSortedRowModel,
 	type Row,
 	type SortingState,
+	type VisibilityState,
 	useReactTable,
 } from "@tanstack/react-table";
 import * as React from "react";
@@ -26,7 +27,13 @@ interface DataTableProps<TData, TValue> {
 	data: TData[];
 	defaultColumnSizing?: Record<string, number>;
 	minColumnSizes?: Record<string, number>;
-	onTrace?: (red: number, blue: number, direction: string) => void;
+	onTrace?: (
+		red: number,
+		blue: number,
+		direction: string,
+		vertical?: number,
+	) => void;
+	columnVisibility?: VisibilityState;
 }
 
 const DEFAULT_COLUMN_SIZES: Record<string, number> = {
@@ -65,9 +72,6 @@ const DataTableRow = React.memo(
 			</TableRow>
 		);
 	},
-	(prev, next) =>
-		prev.row.original === next.row.original &&
-		prev.isHighlighted === next.isHighlighted,
 );
 
 export interface DataTableRef {
@@ -84,6 +88,7 @@ export const DataTable = React.forwardRef<
 		defaultColumnSizing = DEFAULT_COLUMN_SIZES,
 		minColumnSizes = MIN_COLUMN_SIZES,
 		onTrace,
+		columnVisibility = {},
 	},
 	ref,
 ) {
@@ -165,7 +170,9 @@ export const DataTable = React.forwardRef<
 		state: {
 			sorting,
 			columnSizing,
+			columnVisibility,
 		},
+		onColumnVisibilityChange: () => {},
 		meta: {
 			onTrace,
 		},
@@ -278,7 +285,7 @@ export const DataTable = React.forwardRef<
 				}}
 			>
 				<colgroup>
-					{table.getAllLeafColumns().map((column) => {
+					{table.getVisibleLeafColumns().map((column) => {
 						const size =
 							columnSizing[column.id] || defaultColumnSizing[column.id];
 						return <col key={column.id} style={{ width: `${size}%` }} />;

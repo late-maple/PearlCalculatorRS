@@ -24,7 +24,6 @@ impl Default for CannonSettings {
             north_east_tnt: Space3D::default(),
             south_west_tnt: Space3D::default(),
             south_east_tnt: Space3D::default(),
-            tnt_per_accumulation: None,
             offset: Surface2D { x: 0.0, z: 0.0 },
             pearl: PearlInfo {
                 motion: Space3D::default(),

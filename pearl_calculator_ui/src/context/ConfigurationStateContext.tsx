@@ -1,5 +1,5 @@
 import { createContext, type ReactNode, useContext, useState } from "react";
-import type { BitInputState } from "@/types/domain";
+import type { BitInputState, CannonMode } from "@/types/domain";
 
 export interface DraftConfig {
 	max_tnt: string;
@@ -44,6 +44,9 @@ interface ConfigurationStateContextType {
 	setIsBitConfigSkipped: (skipped: boolean) => void;
 	savedPath: string | null;
 	setSavedPath: (path: string | null) => void;
+
+	calculationMode: CannonMode;
+	setCalculationMode: (mode: CannonMode) => void;
 	resetDraft: () => void;
 }
 
@@ -69,7 +72,10 @@ export function ConfigurationStateProvider({
 	const [isWizardActive, setIsWizardActive] = useState(false);
 	const [isFinished, setIsFinished] = useState(false);
 	const [savedPath, setSavedPath] = useState<string | null>(null);
+
 	const [isBitConfigSkipped, setIsBitConfigSkipped] = useState(false);
+	const [calculationMode, setCalculationMode] =
+		useState<CannonMode>("Standard");
 
 	const resetDraft = () => {
 		setDraftConfig(emptyDraftConfig);
@@ -81,6 +87,7 @@ export function ConfigurationStateProvider({
 		setSavedPath(null);
 		setIsWizardActive(false);
 		setIsFinished(false);
+		setCalculationMode("Standard");
 	};
 
 	return (
@@ -104,6 +111,9 @@ export function ConfigurationStateProvider({
 				setIsBitConfigSkipped,
 				savedPath,
 				setSavedPath,
+
+				calculationMode,
+				setCalculationMode,
 				resetDraft,
 			}}
 		>

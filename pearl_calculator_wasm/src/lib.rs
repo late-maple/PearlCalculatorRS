@@ -43,6 +43,7 @@ pub fn calculate_pearl_trace(val: JsValue) -> Result<JsValue, JsError> {
         &cannon,
         input.red_tnt,
         input.blue_tnt,
+        input.vertical_tnt_amount.unwrap_or(0),
         flight_direction,
         10000,
         &[],

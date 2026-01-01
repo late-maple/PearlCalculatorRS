@@ -3,10 +3,15 @@ import { CoercedNumberSchema, TNTDirectionSchema } from "@/lib/schemas";
 import type {
 	BitDirection,
 	BitInputState,
+	CannonMode,
 	GeneralConfig,
 } from "@/types/domain";
 
 export type TNTDirection = z.infer<typeof TNTDirectionSchema>;
+
+export function toBackendMode(mode: CannonMode): "Standard" | "Accumulation" {
+	return mode === "Accumulation" ? "Accumulation" : "Standard";
+}
 
 export interface DraftConfig {
 	pearl_x_position: string;

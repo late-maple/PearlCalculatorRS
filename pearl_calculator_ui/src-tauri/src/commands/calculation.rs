@@ -5,7 +5,7 @@ use pearl_calculator_bridge::outputs::{
 use pearl_calculator_core::calculation::calculation::{
     calculate_pearl_trace, calculate_raw_trace, calculate_tnt_amount,
 };
-use pearl_calculator_core::calculation::inputs::{Cannon, Pearl};
+
 use pearl_calculator_core::physics::entities::movement::PearlVersion;
 use pearl_calculator_core::physics::world::direction::Direction;
 use pearl_calculator_core::physics::world::layout_direction::LayoutDirection;
@@ -30,46 +30,9 @@ pub fn calculate_tnt_amount_command(input: CalculationInput) -> Result<serde_jso
         _ => return Err("Invalid pearl version".to_string()),
     };
 
-    let default_red_direction = parse_layout_direction(&input.default_red_direction);
-    let default_blue_direction = parse_layout_direction(&input.default_blue_direction);
+    let cannon = input.get_cannon()?;
 
-    let y_offset = input.cannon_y - input.pearl_y.floor();
-
-    let cannon = Cannon {
-        pearl: Pearl {
-            position: Space3D::new(input.pearl_x, input.pearl_y + y_offset, input.pearl_z),
-            motion: Space3D::new(
-                input.pearl_motion_x,
-                input.pearl_motion_y,
-                input.pearl_motion_z,
-            ),
-            offset: Space3D::new(input.offset_x, 0.0, input.offset_z),
-        },
-        north_west_tnt: Space3D::new(
-            input.north_west_tnt.x,
-            input.north_west_tnt.y + y_offset,
-            input.north_west_tnt.z,
-        ),
-        north_east_tnt: Space3D::new(
-            input.north_east_tnt.x,
-            input.north_east_tnt.y + y_offset,
-            input.north_east_tnt.z,
-        ),
-        south_west_tnt: Space3D::new(
-            input.south_west_tnt.x,
-            input.south_west_tnt.y + y_offset,
-            input.south_west_tnt.z,
-        ),
-        south_east_tnt: Space3D::new(
-            input.south_east_tnt.x,
-            input.south_east_tnt.y + y_offset,
-            input.south_east_tnt.z,
-        ),
-        default_red_duper: default_red_direction,
-        default_blue_duper: default_blue_direction,
-    };
-
-    let destination = Space3D::new(input.destination_x, 0.0, input.destination_z);
+    let destination = input.get_destination();
 
     let results = calculate_tnt_amount(
         &cannon,
@@ -80,27 +43,7 @@ pub fn calculate_tnt_amount_command(input: CalculationInput) -> Result<serde_jso
         version,
     );
 
-    let output_results: Vec<TNTResultOutput> = results
-        .into_iter()
-        .map(|r| TNTResultOutput {
-            distance: r.distance,
-            tick: r.tick,
-            blue: r.blue,
-            red: r.red,
-            total: r.total,
-            pearl_end_pos: Space3DOutput {
-                x: r.pearl_end_pos.x,
-                y: r.pearl_end_pos.y,
-                z: r.pearl_end_pos.z,
-            },
-            pearl_end_motion: Space3DOutput {
-                x: r.pearl_end_motion.x,
-                y: r.pearl_end_motion.y,
-                z: r.pearl_end_motion.z,
-            },
-            direction: format!("{:?}", r.direction),
-        })
-        .collect();
+    let output_results: Vec<TNTResultOutput> = results.into_iter().map(|r| r.into()).collect();
 
     match serde_json::to_value(&output_results) {
         Ok(json) => Ok(json),
@@ -129,43 +72,8 @@ pub fn calculate_pearl_trace_command(input: PearlTraceInput) -> Result<PearlTrac
 
     let default_red_direction = parse_layout_direction(&input.default_red_direction)
         .ok_or_else(|| "Invalid red direction".to_string())?;
-    let default_blue_direction = parse_layout_direction(&input.default_blue_direction);
 
-    let y_offset = input.cannon_y - input.pearl_y.floor();
-
-    let cannon = Cannon {
-        pearl: Pearl {
-            position: Space3D::new(input.pearl_x, input.pearl_y + y_offset, input.pearl_z),
-            motion: Space3D::new(
-                input.pearl_motion_x,
-                input.pearl_motion_y,
-                input.pearl_motion_z,
-            ),
-            offset: Space3D::new(input.offset_x, 0.0, input.offset_z),
-        },
-        north_west_tnt: Space3D::new(
-            input.north_west_tnt.x,
-            input.north_west_tnt.y + y_offset,
-            input.north_west_tnt.z,
-        ),
-        north_east_tnt: Space3D::new(
-            input.north_east_tnt.x,
-            input.north_east_tnt.y + y_offset,
-            input.north_east_tnt.z,
-        ),
-        south_west_tnt: Space3D::new(
-            input.south_west_tnt.x,
-            input.south_west_tnt.y + y_offset,
-            input.south_west_tnt.z,
-        ),
-        south_east_tnt: Space3D::new(
-            input.south_east_tnt.x,
-            input.south_east_tnt.y + y_offset,
-            input.south_east_tnt.z,
-        ),
-        default_red_duper: Some(default_red_direction),
-        default_blue_duper: default_blue_direction,
-    };
+    let cannon = input.get_cannon()?;
 
     let flight_direction = if let Some(dir_str) = &input.direction {
         match dir_str.as_str() {
@@ -183,6 +91,7 @@ pub fn calculate_pearl_trace_command(input: PearlTraceInput) -> Result<PearlTrac
         &cannon,
         input.red_tnt,
         input.blue_tnt,
+        input.vertical_tnt_amount.unwrap_or(0),
         flight_direction,
         10000,
         &[],

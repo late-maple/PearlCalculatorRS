@@ -5,6 +5,7 @@ import {
 	BitInputStateSchema,
 	BitTemplateConfigSchema,
 	CalculatorInputsSchema,
+	CannonModeSchema,
 	GeneralConfigSchema,
 	MaskGroupSchema,
 	PearlTraceResultSchema,
@@ -15,6 +16,8 @@ import {
 } from "@/lib/schemas";
 
 export type PearlVersion = z.infer<typeof PearlVersionSchema>;
+
+export type CannonMode = z.infer<typeof CannonModeSchema>;
 
 export type TNTResult = z.infer<typeof TNTResultSchema>;
 

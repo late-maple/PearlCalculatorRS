@@ -10,6 +10,11 @@
 		},
 		"breadcrumb": {
 			"back": "Back",
+			"mode": {
+				"Standard": "Standard (2D)",
+				"Accumulation": "Accumulation (Lazy Loaded)",
+				"Vector3D": "Vector (3D)"
+			},
 			"select_config": "Select Config",
 			"calculator": "Calculator",
 			"pearl_trace": "Pearl Trace",
@@ -100,6 +105,9 @@
 			"header_vx": "VX",
 			"header_vy": "VY",
 			"header_vz": "VZ",
+			"header_vertical": "Vertical",
+			"direction_vertical": "Vertical TNT",
+			"label_dest_y": "Destination Y",
 			"bit_calc_btn": "Bit Calculation",
 			"bit_calculate_btn": "Calculate",
 			"direction_label": "DIRECTION",

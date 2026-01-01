@@ -151,17 +151,6 @@ pub fn calculate_tnt_amount(
 
             let total = r_u32 + b_u32 + v_u32;
 
-            let mut acc_counts = None;
-            if cannon.mode == CannonMode::Accumulation && max_tnt > 0 {
-                if total > max_tnt {
-                    let extra = total - max_tnt;
-                    let per = cannon.tnt_per_accumulation.max(1);
-                    acc_counts = Some((extra + per - 1) / per);
-                } else {
-                    acc_counts = Some(0);
-                }
-            }
-
             let tnt_impact =
                 red_vec * (r_u32 as f64) + blue_vec * (b_u32 as f64) + vert_vec * (v_u32 as f64);
 
@@ -206,7 +195,6 @@ pub fn calculate_tnt_amount(
                     blue: b_u32,
                     red: r_u32,
                     vertical: v_u32,
-                    accumulation_counts: acc_counts,
                     total,
                     pearl_end_pos: best_hit.position,
                     pearl_end_motion: best_hit.motion,

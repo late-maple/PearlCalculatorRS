@@ -2,6 +2,12 @@ import { z } from "zod";
 
 export const PearlVersionSchema = z.enum(["Legacy", "Post1205", "Post1212"]);
 
+export const CannonModeSchema = z.enum([
+	"Standard",
+	"Accumulation",
+	"Vector3D",
+]);
+
 export const TNTDirectionSchema = z.enum([
 	"SouthEast",
 	"NorthWest",
@@ -40,6 +46,8 @@ export const TNTResultSchema = z.object({
 	pearl_end_pos: z.object({ X: z.number(), Y: z.number(), Z: z.number() }),
 	pearl_end_motion: z.object({ X: z.number(), Y: z.number(), Z: z.number() }),
 	direction: z.string(),
+	vertical: z.number().optional(),
+	charges: z.number().optional(),
 });
 
 export const PearlTraceResultSchema = z.object({
@@ -83,6 +91,8 @@ export const GeneralConfigSchema = z.object({
 	default_blue_tnt_position: TNTDirectionSchema,
 	offset_x: z.number().optional(),
 	offset_z: z.number().optional(),
+	vertical_tnt: Vector3Schema.optional(),
+	mode: CannonModeSchema.optional(),
 });
 
 export const SimulatorConfigSchema = z.object({
@@ -104,6 +114,7 @@ export const CalculatorInputsSchema = z.object({
 	pearlX: z.string(),
 	pearlZ: z.string(),
 	destX: z.string(),
+	destY: z.string().optional(),
 	destZ: z.string(),
 	cannonY: z.string(),
 	offsetX: z.string(),

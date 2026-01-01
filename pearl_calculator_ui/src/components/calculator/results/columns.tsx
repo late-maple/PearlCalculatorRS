@@ -12,6 +12,8 @@ export type CalculationResult = {
 	red: number;
 	total: number;
 	direction: string;
+	vertical?: number;
+	warmup?: number;
 };
 export const columns: ColumnDef<CalculationResult>[] = [
 	{
@@ -105,6 +107,50 @@ export const columns: ColumnDef<CalculationResult>[] = [
 		enableResizing: false,
 	},
 	{
+		accessorKey: "vertical",
+		header: ({ column }) => {
+			const { t } = useTranslation();
+			return (
+				<div className="flex justify-center">
+					<Button
+						variant="ghost"
+						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+						className="font-bold hover:bg-accent"
+					>
+						{t("calculator.header_vertical", "Vertical")}
+					</Button>
+				</div>
+			);
+		},
+		cell: ({ row }) => {
+			const val = row.getValue("vertical") as number | undefined;
+			return <div className="text-left font-medium">{val ?? 0}</div>;
+		},
+		enableResizing: false,
+	},
+	{
+		accessorKey: "charges",
+		header: ({ column }) => {
+			const { t } = useTranslation();
+			return (
+				<div className="flex justify-center">
+					<Button
+						variant="ghost"
+						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+						className="font-bold hover:bg-accent"
+					>
+						{t("calculator.header_charges", "Charges")}
+					</Button>
+				</div>
+			);
+		},
+		cell: ({ row }) => {
+			const val = row.getValue("charges") as number | undefined;
+			return <div className="text-left font-medium">{val ?? 0}</div>;
+		},
+		enableResizing: false,
+	},
+	{
 		accessorKey: "total",
 		header: ({ column }) => {
 			const { t } = useTranslation();
@@ -136,11 +182,17 @@ export const columns: ColumnDef<CalculationResult>[] = [
 		cell: ({ row, table }) => {
 			const { t } = useTranslation();
 			const meta = table.options.meta as {
-				onTrace: (red: number, blue: number, direction: string) => void;
+				onTrace: (
+					red: number,
+					blue: number,
+					direction: string,
+					vertical?: number,
+				) => void;
 			};
 			const red = row.getValue("red") as number;
 			const blue = row.getValue("blue") as number;
 			const direction = row.original.direction;
+			const vertical = row.original.vertical;
 
 			return (
 				<div className="flex justify-center">
@@ -148,7 +200,7 @@ export const columns: ColumnDef<CalculationResult>[] = [
 						variant="ghost"
 						size="icon"
 						className="h-6 w-6"
-						onClick={() => meta?.onTrace(red, blue, direction)}
+						onClick={() => meta?.onTrace(red, blue, direction, vertical)}
 					>
 						<ArrowRight className="h-3.5 w-3.5" />
 						<span className="sr-only">{t("calculator.sr_view_trace")}</span>

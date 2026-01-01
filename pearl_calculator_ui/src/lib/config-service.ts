@@ -48,6 +48,7 @@ const LooseConfigSchema = z
 		DirectionMasks: z.record(z.string(), z.any()).optional(),
 		RedValues: z.array(z.any()).optional(),
 		IsRedArrowCenter: z.boolean().optional(),
+		Mode: z.string().optional(),
 	})
 	.passthrough();
 
@@ -91,6 +92,7 @@ function normalizeConfig(dirty: DirtyConfig): GeneralConfig {
 		default_blue_tnt_position: blueDir,
 		offset_x: Number(root.Offset?.X ?? 0),
 		offset_z: Number(root.Offset?.Z ?? 0),
+		mode: root.Mode,
 	};
 
 	return GeneralConfigSchema.parse(config);

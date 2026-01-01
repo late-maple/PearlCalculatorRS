@@ -19,6 +19,7 @@ import {
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useConfig } from "@/context/ConfigContext";
+import { useConfigurationState } from "@/context/ConfigurationStateContext";
 import { useToastNotifications } from "@/hooks/use-toast-notifications";
 import { buildEncodableConfig, encodeConfig } from "@/lib/config-codec";
 import { getOppositeDirection } from "@/lib/config-utils";
@@ -79,6 +80,7 @@ export default function ConfigurationDataForm({
 }: ConfigurationDataFormProps) {
 	const { t } = useTranslation();
 	const { bitTemplateConfig } = useConfig();
+	const { calculationMode } = useConfigurationState();
 	const { showSuccess, showError } = useToastNotifications();
 	const baseY = Math.floor(config.pearl_y_position);
 	const yOffset = (parseFloat(cannonYDisplay) || baseY) - baseY;
@@ -226,21 +228,40 @@ export default function ConfigurationDataForm({
 							}
 						/>
 
-						<div className="col-span-2 space-y-1.5">
-							<div className="text-xs font-bold text-foreground/80">
-								{t("calculator.max_tnt")}
-							</div>
-							<div className="grid grid-cols-2 gap-x-2">
-								<CompactInput
-									label="MAX"
-									labelClassName={alignedLabelClass}
-									value={config.max_tnt}
-									onChange={(v) =>
-										onConfigChange({ ...config, max_tnt: parseFloat(v) || 0 })
-									}
+						{calculationMode === "Vector3D" && (
+							<div className="col-span-2">
+								<TNTBlock
+									title={t("calculator.direction_vertical", "Vertical TNT")}
+									data={config.vertical_tnt || { x: 0, y: 0, z: 0 }}
+									yOffset={yOffset}
+									onUpdate={(k, v) => {
+										const current = config.vertical_tnt || { x: 0, y: 0, z: 0 };
+										onConfigChange({
+											...config,
+											vertical_tnt: { ...current, [k]: v },
+										});
+									}}
 								/>
 							</div>
-						</div>
+						)}
+
+						{calculationMode !== "Accumulation" && (
+							<div className="col-span-2 space-y-1.5">
+								<div className="text-xs font-bold text-foreground/80">
+									{t("calculator.max_tnt")}
+								</div>
+								<div className="grid grid-cols-2 gap-x-2">
+									<CompactInput
+										label="MAX"
+										labelClassName={alignedLabelClass}
+										value={config.max_tnt}
+										onChange={(v) =>
+											onConfigChange({ ...config, max_tnt: parseFloat(v) || 0 })
+										}
+									/>
+								</div>
+							</div>
+						)}
 
 						<div className="col-span-2 space-y-1.5">
 							<div className="text-xs font-bold text-foreground/80">

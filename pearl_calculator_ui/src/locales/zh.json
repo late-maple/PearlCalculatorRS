@@ -10,6 +10,11 @@
 		},
 		"breadcrumb": {
 			"back": "返回",
+			"mode": {
+				"Standard": "标准模式 (2D)",
+				"Accumulation": "堆叠模式 (弱加载)",
+				"Vector3D": "矢量模式 (3D)"
+			},
 			"select_config": "选择配置",
 			"calculator": "TNT 计算",
 			"pearl_trace": "珍珠轨迹",
@@ -100,6 +105,9 @@
 			"header_vx": "X动量",
 			"header_vy": "Y动量",
 			"header_vz": "Z动量",
+			"header_vertical": "垂直",
+			"direction_vertical": "垂直 TNT",
+			"label_dest_y": "目标 Y 坐标",
 			"bit_calc_btn": "Bit计算",
 			"bit_calculate_btn": "开始计算",
 			"direction_label": "方向",

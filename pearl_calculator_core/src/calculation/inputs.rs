@@ -36,7 +36,6 @@ pub struct Cannon {
     pub south_east_tnt: Space3D,
     pub default_red_duper: Option<LayoutDirection>,
     pub default_blue_duper: Option<LayoutDirection>,
-    pub tnt_per_accumulation: u32,
 }
 
 impl Cannon {
@@ -57,7 +56,6 @@ impl Cannon {
             south_east_tnt: settings.south_east_tnt,
             default_red_duper: settings.default_red_direction,
             default_blue_duper: settings.default_blue_direction,
-            tnt_per_accumulation: settings.tnt_per_accumulation.unwrap_or(1),
         }
     }
 }

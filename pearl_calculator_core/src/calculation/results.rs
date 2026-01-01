@@ -8,7 +8,6 @@ pub struct TNTResult {
     pub blue: u32,
     pub red: u32,
     pub vertical: u32,
-    pub accumulation_counts: Option<u32>,
     pub yaw: f64,
     pub pitch: f64,
     pub total: u32,
