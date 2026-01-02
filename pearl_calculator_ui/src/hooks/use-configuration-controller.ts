@@ -91,7 +91,8 @@ export function useConfigurationController() {
 		let zodErrors: z.ZodIssue[] = [];
 
 		const result = match(step)
-			.with(1, () =>
+			.with(1, () => ({ success: true, error: null }))
+			.with(2, () =>
 				WizardBasicInfoSchema.safeParse({
 					cannonCenter,
 					pearlPosition: {
@@ -107,7 +108,7 @@ export function useConfigurationController() {
 					maxTNT: draftConfig.max_tnt,
 				}),
 			)
-			.with(2, () =>
+			.with(3, () =>
 				WizardTNTConfigSchema.safeParse({
 					northWest: draftConfig.north_west_tnt,
 					northEast: draftConfig.north_east_tnt,
@@ -116,7 +117,7 @@ export function useConfigurationController() {
 					redTNTLocation,
 				}),
 			)
-			.with(3, () =>
+			.with(4, () =>
 				WizardBitConfigSchema.safeParse({
 					state: bitTemplateState,
 					skipped: isBitConfigSkipped,
@@ -203,7 +204,7 @@ export function useConfigurationController() {
 	};
 
 	const handleFinish = () => {
-		if (validateStep(3)) {
+		if (validateStep(4)) {
 			setIsFinished(true);
 			setShouldRestoreLastPage(true);
 		}

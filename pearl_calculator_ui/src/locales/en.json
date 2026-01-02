@@ -189,7 +189,15 @@
 			"color_blue": "Blue",
 			"copy_code_btn": "Copy Code",
 			"toast_code_copied": "Code copied to clipboard",
-			"toast_exported": "Configuration exported successfully"
+			"toast_exported": "Configuration exported successfully",
+			"cannon_type_title": "Cannon Type",
+			"cannon_type_desc": "Select the type of pearl cannon you are configuring.",
+			"mode_standard_title": "Standard (2D)",
+			"mode_standard_desc": "Standard horizontal pearl cannon with 4 directional TNT groups.",
+			"mode_accumulation_title": "Accumulation (Lazy Loaded)",
+			"mode_accumulation_desc": "Lazy loaded cannon with accumulated TNT charges.",
+			"mode_vector3d_title": "Vector (3D)",
+			"mode_vector3d_desc": "3D vector cannon with vertical TNT support."
 		},
 		"error": {
 			"config": {

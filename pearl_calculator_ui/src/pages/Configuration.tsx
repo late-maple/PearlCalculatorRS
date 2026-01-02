@@ -14,6 +14,7 @@ import { useTranslation } from "react-i18next";
 import { OnboardingPanel } from "@/components/common/OnboardingPanel";
 import { BasicInfoStep } from "@/components/configuration/BasicInfoStep";
 import { BitConfigurationStep } from "@/components/configuration/BitConfigurationStep";
+import { CannonTypeStep } from "@/components/configuration/CannonTypeStep";
 import { PreviewStep } from "@/components/configuration/PreviewStep";
 import { TNTConfigurationStep } from "@/components/configuration/TNTConfigurationStep";
 import {
@@ -189,6 +190,11 @@ export default function Configuration() {
 						<CarouselContent className="h-full">
 							<CarouselItem className="h-full">
 								<ScrollArea className="h-full">
+									<CannonTypeStep />
+								</ScrollArea>
+							</CarouselItem>
+							<CarouselItem className="h-full">
+								<ScrollArea className="h-full">
 									<BasicInfoStep
 										errors={errors}
 										onForceNext={handleForceNext}
@@ -265,7 +271,7 @@ export default function Configuration() {
 									</Button>
 								) : (
 									<div className="flex items-center gap-2">
-										{current === 3 && (
+										{current === 4 && (
 											<AlertDialog>
 												<AlertDialogTrigger asChild>
 													<Button variant="outline">

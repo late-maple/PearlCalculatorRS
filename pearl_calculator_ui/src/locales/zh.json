@@ -189,7 +189,15 @@
 			"color_blue": "蓝组 TNT",
 			"copy_code_btn": "复制神秘代码",
 			"toast_code_copied": "神秘代码已复制到剪贴板",
-			"toast_exported": "配置已成功导出"
+			"toast_exported": "配置已成功导出",
+			"cannon_type_title": "珍珠炮类型",
+			"cannon_type_desc": "选择你正在配置的珍珠炮类型。",
+			"mode_standard_title": "标准模式 (2D)",
+			"mode_standard_desc": "标准水平珍珠炮，包含 4 个方向的 TNT 组。",
+			"mode_accumulation_title": "堆叠模式 (弱加载)",
+			"mode_accumulation_desc": "使用累积 TNT 蓄力的弱加载炮。",
+			"mode_vector3d_title": "矢量模式 (3D)",
+			"mode_vector3d_desc": "支持垂直 TNT 的 3D 矢量炮。"
 		},
 		"error": {
 			"config": {
