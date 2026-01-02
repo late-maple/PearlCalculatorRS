@@ -24,6 +24,7 @@ import { useToastNotifications } from "@/hooks/use-toast-notifications";
 import { buildEncodableConfig, encodeConfig } from "@/lib/config-codec";
 import { exportConfiguration } from "@/lib/config-service";
 import { getOppositeDirection } from "@/lib/config-utils";
+import { preciseAdd, preciseSubtract } from "@/lib/floating-point-utils";
 import { cn } from "@/lib/utils";
 import type { GeneralConfig } from "@/types/domain";
 
@@ -52,7 +53,9 @@ function TNTBlock({
 					label="Y"
 					labelClassName="w-3 text-left pr-0"
 					value={data.y + yOffset}
-					onChange={(v) => onUpdate("y", (parseFloat(v) || 0) - yOffset)}
+					onChange={(v) =>
+						onUpdate("y", preciseSubtract(parseFloat(v) || 0, yOffset))
+					}
 				/>
 				<CompactInput
 					label="Z"
@@ -130,7 +133,7 @@ export default function ConfigurationDataForm({
 	const { calculationMode } = useConfigurationState();
 	const { showSuccess, showError } = useToastNotifications();
 	const baseY = Math.floor(config.pearl_y_position);
-	const yOffset = (parseFloat(cannonYDisplay) || baseY) - baseY;
+	const yOffset = preciseSubtract(parseFloat(cannonYDisplay) || baseY, baseY);
 	const alignedLabelClass = "w-8 text-right pr-1 text-[10px] uppercase";
 
 	const handleCopyCode = async () => {
@@ -332,7 +335,7 @@ export default function ConfigurationDataForm({
 									value={config.pearl_y_position + yOffset}
 									onChange={(v) => {
 										const val = parseFloat(v) || 0;
-										const newPearlY = val - yOffset;
+										const newPearlY = preciseSubtract(val, yOffset);
 										const oldBaseY = Math.floor(config.pearl_y_position);
 										const newBaseY = Math.floor(newPearlY);
 										const diff = newBaseY - oldBaseY;
@@ -340,7 +343,9 @@ export default function ConfigurationDataForm({
 										if (diff !== 0) {
 											const currentCannonY =
 												parseFloat(cannonYDisplay) || oldBaseY;
-											onCannonYChange((currentCannonY + diff).toString());
+											onCannonYChange(
+												preciseAdd(currentCannonY, diff).toString(),
+											);
 										}
 
 										onConfigChange({ ...config, pearl_y_position: newPearlY });

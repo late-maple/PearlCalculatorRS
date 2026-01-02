@@ -6,6 +6,7 @@ import type {
 	CannonMode,
 	GeneralConfig,
 } from "@/types/domain";
+import { preciseSubtract } from "./floating-point-utils";
 
 export type TNTDirection = z.infer<typeof TNTDirectionSchema>;
 
@@ -61,9 +62,9 @@ export function getRelativeTNT(
 	cz: number,
 ) {
 	return {
-		x: parseNumber(tnt.x) - cx,
+		x: preciseSubtract(parseNumber(tnt.x), cx),
 		y: parseNumber(tnt.y),
-		z: parseNumber(tnt.z) - cz,
+		z: preciseSubtract(parseNumber(tnt.z), cz),
 	};
 }
 
@@ -73,9 +74,9 @@ export function getRelativeTNTUppercase(
 	cz: number,
 ) {
 	return {
-		X: parseNumber(tnt.x) - cx,
+		X: preciseSubtract(parseNumber(tnt.x), cx),
 		Y: parseNumber(tnt.y),
-		Z: parseNumber(tnt.z) - cz,
+		Z: preciseSubtract(parseNumber(tnt.z), cz),
 	};
 }
 
@@ -133,7 +134,10 @@ export function buildExportConfig(
 		NorthWestTNT: getRelativeTNTUppercase(draftConfig.north_west_tnt, cx, cz),
 		SouthEastTNT: getRelativeTNTUppercase(draftConfig.south_east_tnt, cx, cz),
 		SouthWestTNT: getRelativeTNTUppercase(draftConfig.south_west_tnt, cx, cz),
-		Offset: { X: pearlX - cx, Z: pearlZ - cz },
+		Offset: {
+			X: preciseSubtract(pearlX, cx),
+			Z: preciseSubtract(pearlZ, cz),
+		},
 		Pearl: {
 			Position: {
 				X: 0,
@@ -228,10 +232,10 @@ export function convertConfigToDraft(config: GeneralConfig): {
 		},
 		vertical_tnt: config.vertical_tnt
 			? {
-					x: config.vertical_tnt.x.toString(),
-					y: config.vertical_tnt.y.toString(),
-					z: config.vertical_tnt.z.toString(),
-				}
+				x: config.vertical_tnt.x.toString(),
+				y: config.vertical_tnt.y.toString(),
+				z: config.vertical_tnt.z.toString(),
+			}
 			: { x: "", y: "", z: "" },
 		pearl_x_position: config.pearl_x_position.toString(),
 		pearl_y_position: config.pearl_y_position.toString(),
