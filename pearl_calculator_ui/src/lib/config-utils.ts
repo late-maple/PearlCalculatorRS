@@ -232,10 +232,10 @@ export function convertConfigToDraft(config: GeneralConfig): {
 		},
 		vertical_tnt: config.vertical_tnt
 			? {
-				x: config.vertical_tnt.x.toString(),
-				y: config.vertical_tnt.y.toString(),
-				z: config.vertical_tnt.z.toString(),
-			}
+					x: config.vertical_tnt.x.toString(),
+					y: config.vertical_tnt.y.toString(),
+					z: config.vertical_tnt.z.toString(),
+				}
 			: { x: "", y: "", z: "" },
 		pearl_x_position: config.pearl_x_position.toString(),
 		pearl_y_position: config.pearl_y_position.toString(),
