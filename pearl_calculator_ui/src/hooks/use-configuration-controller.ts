@@ -95,7 +95,7 @@ export function useConfigurationController() {
 	const validateStep = (step: number) => {
 		let zodErrors: z.ZodIssue[] = [];
 
-		const result = match(step)
+		const result: any = match(step)
 			.with(1, () => ({ success: true, error: null }))
 			.with(2, () =>
 				WizardBasicInfoSchema.safeParse({
