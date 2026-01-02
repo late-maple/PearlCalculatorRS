@@ -22,8 +22,8 @@ import { useConfig } from "@/context/ConfigContext";
 import { useConfigurationState } from "@/context/ConfigurationStateContext";
 import { useToastNotifications } from "@/hooks/use-toast-notifications";
 import { buildEncodableConfig, encodeConfig } from "@/lib/config-codec";
-import { getOppositeDirection } from "@/lib/config-utils";
 import { exportConfiguration } from "@/lib/config-service";
+import { getOppositeDirection } from "@/lib/config-utils";
 import { cn } from "@/lib/utils";
 import type { GeneralConfig } from "@/types/domain";
 
@@ -61,6 +61,53 @@ function TNTBlock({
 					onChange={(v) => onUpdate("z", parseFloat(v) || 0)}
 				/>
 			</div>
+		</div>
+	);
+}
+
+const DIRECTION_OPTIONS = [
+	{ value: "SouthEast", labelKey: "calculator.direction_se_short" },
+	{ value: "NorthWest", labelKey: "calculator.direction_nw_short" },
+	{ value: "SouthWest", labelKey: "calculator.direction_sw_short" },
+	{ value: "NorthEast", labelKey: "calculator.direction_ne_short" },
+] as const;
+
+type DirectionValue = "SouthEast" | "NorthWest" | "SouthWest" | "NorthEast";
+
+function DirectionSelect({
+	label,
+	value,
+	onChange,
+	labelClassName,
+}: {
+	label: string;
+	value: DirectionValue;
+	onChange: (value: DirectionValue) => void;
+	labelClassName: string;
+}) {
+	const { t } = useTranslation();
+	return (
+		<div className="flex items-center gap-1.5">
+			<Label
+				className={cn(
+					"font-mono text-muted-foreground shrink-0 pt-0.5",
+					labelClassName,
+				)}
+			>
+				{label}
+			</Label>
+			<Select value={value} onValueChange={onChange}>
+				<SelectTrigger className="h-7 text-xs font-mono shadow-none focus:ring-1 w-full flex-1">
+					<SelectValue />
+				</SelectTrigger>
+				<SelectContent>
+					{DIRECTION_OPTIONS.map((opt) => (
+						<SelectItem key={opt.value} value={opt.value}>
+							{t(opt.labelKey)}
+						</SelectItem>
+					))}
+				</SelectContent>
+			</Select>
 		</div>
 	);
 }
@@ -307,71 +354,18 @@ export default function ConfigurationDataForm({
 								{t("calculator.default_positions")}
 							</div>
 							<div className="grid grid-cols-2 gap-x-2">
-								<div className="flex items-center gap-1.5">
-									<Label
-										className={cn(
-											"font-mono text-muted-foreground shrink-0 pt-0.5",
-											alignedLabelClass,
-										)}
-									>
-										{t("calculator.color_blue")}
-									</Label>
-									<Select
-										value={config.default_blue_tnt_position}
-										onValueChange={handleBlueTntPositionChange}
-									>
-										<SelectTrigger className="h-7 text-xs font-mono shadow-none focus:ring-1 w-full flex-1">
-											<SelectValue />
-										</SelectTrigger>
-										<SelectContent>
-											<SelectItem value="SouthEast">
-												{t("calculator.direction_se_short")}
-											</SelectItem>
-											<SelectItem value="NorthWest">
-												{t("calculator.direction_nw_short")}
-											</SelectItem>
-											<SelectItem value="SouthWest">
-												{t("calculator.direction_sw_short")}
-											</SelectItem>
-											<SelectItem value="NorthEast">
-												{t("calculator.direction_ne_short")}
-											</SelectItem>
-										</SelectContent>
-									</Select>
-								</div>
-
-								<div className="flex items-center gap-1.5">
-									<Label
-										className={cn(
-											"font-mono text-muted-foreground shrink-0 pt-0.5",
-											alignedLabelClass,
-										)}
-									>
-										{t("calculator.color_red")}
-									</Label>
-									<Select
-										value={config.default_red_tnt_position}
-										onValueChange={handleRedTntPositionChange}
-									>
-										<SelectTrigger className="h-7 text-xs font-mono shadow-none focus:ring-1 w-full flex-1">
-											<SelectValue />
-										</SelectTrigger>
-										<SelectContent>
-											<SelectItem value="SouthEast">
-												{t("calculator.direction_se_short")}
-											</SelectItem>
-											<SelectItem value="NorthWest">
-												{t("calculator.direction_nw_short")}
-											</SelectItem>
-											<SelectItem value="SouthWest">
-												{t("calculator.direction_sw_short")}
-											</SelectItem>
-											<SelectItem value="NorthEast">
-												{t("calculator.direction_ne_short")}
-											</SelectItem>
-										</SelectContent>
-									</Select>
-								</div>
+								<DirectionSelect
+									label={t("calculator.color_blue")}
+									value={config.default_blue_tnt_position}
+									onChange={handleBlueTntPositionChange}
+									labelClassName={alignedLabelClass}
+								/>
+								<DirectionSelect
+									label={t("calculator.color_red")}
+									value={config.default_red_tnt_position}
+									onChange={handleRedTntPositionChange}
+									labelClassName={alignedLabelClass}
+								/>
 							</div>
 						</div>
 					</div>

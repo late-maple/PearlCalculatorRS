@@ -1,5 +1,5 @@
 "use client";
-import type { ColumnDef } from "@tanstack/react-table";
+import type { Column, ColumnDef } from "@tanstack/react-table";
 import { ArrowRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
@@ -14,165 +14,96 @@ export type CalculationResult = {
 	direction: string;
 	vertical?: number;
 	warmup?: number;
+	charges?: number;
 };
+
+function SortableHeader<T>({
+	column,
+	labelKey,
+	fallback,
+}: {
+	column: Column<T>;
+	labelKey: string;
+	fallback?: string;
+}) {
+	const { t } = useTranslation();
+	return (
+		<div className="flex justify-center">
+			<Button
+				variant="ghost"
+				onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+				className="font-bold hover:bg-accent"
+			>
+				{/* @ts-expect-error - labelKey comes from known translation keys */}
+				{t(labelKey, fallback)}
+			</Button>
+		</div>
+	);
+}
+
+function SimpleCell({ value }: { value: React.ReactNode }) {
+	return <div className="text-left font-medium">{value}</div>;
+}
+
+type ColumnConfig = {
+	accessorKey: keyof CalculationResult;
+	labelKey: string;
+	fallback?: string;
+	cellRenderer?: (value: unknown) => React.ReactNode;
+};
+
+function createColumn(config: ColumnConfig): ColumnDef<CalculationResult> {
+	const { accessorKey, labelKey, fallback, cellRenderer } = config;
+	return {
+		accessorKey,
+		header: ({ column }) => (
+			<SortableHeader column={column} labelKey={labelKey} fallback={fallback} />
+		),
+		cell: ({ row }) => {
+			const value = row.getValue(accessorKey);
+			const displayValue = cellRenderer
+				? cellRenderer(value)
+				: (value as React.ReactNode);
+			return <SimpleCell value={displayValue} />;
+		},
+		enableResizing: false,
+	};
+}
+
 export const columns: ColumnDef<CalculationResult>[] = [
-	{
+	createColumn({
 		accessorKey: "distance",
-		header: ({ column }) => {
-			const { t } = useTranslation();
-			return (
-				<div className="flex justify-center">
-					<Button
-						variant="ghost"
-						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-						className="font-bold hover:bg-accent"
-					>
-						{t("calculator.header_distance")}
-					</Button>
-				</div>
-			);
-		},
-		cell: ({ row }) => {
-			const amount = parseFloat(row.getValue("distance"));
-			const formatted = amount.toFixed(15);
-			return <div className="text-left font-medium">{formatted}</div>;
-		},
-		enableResizing: false,
-	},
-	{
+		labelKey: "calculator.header_distance",
+		cellRenderer: (v) => (parseFloat(v as string) || 0).toFixed(15),
+	}),
+	createColumn({
 		accessorKey: "ticks",
-		header: ({ column }) => {
-			const { t } = useTranslation();
-			return (
-				<div className="flex justify-center">
-					<Button
-						variant="ghost"
-						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-						className="font-bold hover:bg-accent"
-					>
-						{t("calculator.header_ticks")}
-					</Button>
-				</div>
-			);
-		},
-		cell: ({ row }) => {
-			return (
-				<div className="text-left font-medium">{row.getValue("ticks")}</div>
-			);
-		},
-		enableResizing: false,
-	},
-	{
+		labelKey: "calculator.header_ticks",
+	}),
+	createColumn({
 		accessorKey: "blue",
-		header: ({ column }) => {
-			const { t } = useTranslation();
-			return (
-				<div className="flex justify-center">
-					<Button
-						variant="ghost"
-						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-						className="font-bold hover:bg-accent"
-					>
-						{t("calculator.header_blue")}
-					</Button>
-				</div>
-			);
-		},
-		cell: ({ row }) => {
-			return (
-				<div className="text-left font-medium">{row.getValue("blue")}</div>
-			);
-		},
-		enableResizing: false,
-	},
-	{
+		labelKey: "calculator.header_blue",
+	}),
+	createColumn({
 		accessorKey: "red",
-		header: ({ column }) => {
-			const { t } = useTranslation();
-			return (
-				<div className="flex justify-center">
-					<Button
-						variant="ghost"
-						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-						className="font-bold hover:bg-accent"
-					>
-						{t("calculator.header_red")}
-					</Button>
-				</div>
-			);
-		},
-		cell: ({ row }) => {
-			return <div className="text-left font-medium">{row.getValue("red")}</div>;
-		},
-		enableResizing: false,
-	},
-	{
+		labelKey: "calculator.header_red",
+	}),
+	createColumn({
 		accessorKey: "vertical",
-		header: ({ column }) => {
-			const { t } = useTranslation();
-			return (
-				<div className="flex justify-center">
-					<Button
-						variant="ghost"
-						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-						className="font-bold hover:bg-accent"
-					>
-						{t("calculator.header_vertical", "Vertical")}
-					</Button>
-				</div>
-			);
-		},
-		cell: ({ row }) => {
-			const val = row.getValue("vertical") as number | undefined;
-			return <div className="text-left font-medium">{val ?? 0}</div>;
-		},
-		enableResizing: false,
-	},
-	{
+		labelKey: "calculator.header_vertical",
+		fallback: "Vertical",
+		cellRenderer: (v) => (v as number | undefined) ?? 0,
+	}),
+	createColumn({
 		accessorKey: "charges",
-		header: ({ column }) => {
-			const { t } = useTranslation();
-			return (
-				<div className="flex justify-center">
-					<Button
-						variant="ghost"
-						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-						className="font-bold hover:bg-accent"
-					>
-						{t("calculator.header_charges", "Charges")}
-					</Button>
-				</div>
-			);
-		},
-		cell: ({ row }) => {
-			const val = row.getValue("charges") as number | undefined;
-			return <div className="text-left font-medium">{val ?? 0}</div>;
-		},
-		enableResizing: false,
-	},
-	{
+		labelKey: "calculator.header_charges",
+		fallback: "Charges",
+		cellRenderer: (v) => (v as number | undefined) ?? 0,
+	}),
+	createColumn({
 		accessorKey: "total",
-		header: ({ column }) => {
-			const { t } = useTranslation();
-			return (
-				<div className="flex justify-center">
-					<Button
-						variant="ghost"
-						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-						className="font-bold hover:bg-accent"
-					>
-						{t("calculator.header_total")}
-					</Button>
-				</div>
-			);
-		},
-		cell: ({ row }) => {
-			return (
-				<div className="text-left font-medium">{row.getValue("total")}</div>
-			);
-		},
-		enableResizing: false,
-	},
+		labelKey: "calculator.header_total",
+	}),
 	{
 		id: "actions",
 		header: () => null,
