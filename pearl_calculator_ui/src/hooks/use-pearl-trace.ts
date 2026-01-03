@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { invoke } from "@tauri-apps/api/core";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { useConfig } from "@/context/ConfigContext";
@@ -7,6 +6,7 @@ import { useConfigurationState } from "@/context/ConfigurationStateContext";
 import { useToastNotifications } from "@/hooks/use-toast-notifications";
 import { CoercedNumberSchema } from "@/lib/schemas";
 import { toBackendMode } from "@/lib/config-utils";
+import { calculatorService } from "@/services";
 import type { PearlTraceResult } from "@/types/domain";
 
 export interface PearlTraceInputs {
@@ -84,10 +84,8 @@ export function usePearlTrace() {
 
 			console.log("Sending trace input:", traceInput);
 
-			const traceResult = await invoke<PearlTraceResult>(
-				"calculate_pearl_trace_command",
-				{ input: traceInput },
-			);
+			const traceResult =
+				await calculatorService.calculatePearlTrace(traceInput);
 			return traceResult;
 		} catch (error) {
 			console.error("Pearl trace calculation failed:", error);
