@@ -295,7 +295,30 @@ export default function ConfigurationDataForm({
 							</div>
 						)}
 
-						{calculationMode !== "Accumulation" && (
+						{calculationMode === "Vector3D" && (
+							<div className="col-span-2 space-y-1.5">
+								<div className="text-xs font-bold text-foreground/80">
+									{t("configuration_page.max_vertical_tnt_label")}
+								</div>
+								<div className="grid grid-cols-2 gap-x-2">
+									<CompactInput
+										label="MAX"
+										labelClassName={alignedLabelClass}
+										value={config.max_vertical_tnt ?? 0}
+										onChange={(v) =>
+											onConfigChange({
+												...config,
+												max_vertical_tnt: Number.isNaN(parseFloat(v))
+													? undefined
+													: parseFloat(v),
+											})
+										}
+									/>
+								</div>
+							</div>
+						)}
+
+						{calculationMode === "Standard" && (
 							<div className="col-span-2 space-y-1.5">
 								<div className="text-xs font-bold text-foreground/80">
 									{t("calculator.max_tnt")}

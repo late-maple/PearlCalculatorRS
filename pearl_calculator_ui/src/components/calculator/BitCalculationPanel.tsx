@@ -46,7 +46,8 @@ export default function BitCalculationPanel() {
 	const { calculationMode } = useConfigurationState();
 	const { showError } = useToastNotifications();
 
-	const isAccumulationMode = calculationMode === "Accumulation";
+	const hasMultiplierSupport =
+		calculationMode === "Accumulation" || calculationMode === "Vector3D";
 
 	const traceTNT = defaultCalculator.trace.tnt;
 	const traceDirection = defaultCalculator.trace.direction;
@@ -135,7 +136,7 @@ export default function BitCalculationPanel() {
 	const runCalculation = useCallback(() => {
 		if (!inputState || !traceTNT) return;
 
-		if (isAccumulationMode) {
+		if (hasMultiplierSupport) {
 			const multiplierValues = parseMultiplierValues(multiplierState);
 
 			let blueTNT = traceTNT.blue;
@@ -208,7 +209,7 @@ export default function BitCalculationPanel() {
 		traceDirection,
 		showError,
 		t,
-		isAccumulationMode,
+		hasMultiplierSupport,
 		multiplierState,
 	]);
 
@@ -252,7 +253,7 @@ export default function BitCalculationPanel() {
 
 								<CollapsibleContent>
 									<div className="pt-2 space-y-4">
-										{isAccumulationMode && (
+										{hasMultiplierSupport && (
 											<>
 												<Collapsible defaultOpen className="space-y-2">
 													<CollapsibleTrigger className="group flex w-full items-center justify-center gap-2 py-1.5 px-3 bg-amber-50 hover:bg-amber-100/80 rounded-lg border border-amber-200 transition-colors">
@@ -285,7 +286,7 @@ export default function BitCalculationPanel() {
 											</>
 										)}
 
-										{!isAccumulationMode && (
+										{!hasMultiplierSupport && (
 											<BitInputSection
 												value={inputState}
 												onChange={handleInputChange}
@@ -305,9 +306,9 @@ export default function BitCalculationPanel() {
 							</Collapsible>
 
 							<div
-								className={`flex-1 flex flex-col justify-center ${isAccumulationMode && !isConfigOpen ? "-mt-8" : ""}`}
+								className={`flex-1 flex flex-col justify-center ${hasMultiplierSupport && !isConfigOpen ? "-mt-8" : ""}`}
 							>
-								{isAccumulationMode && (
+								{hasMultiplierSupport && (
 									<BitResultSection
 										sideCount={multiplierState.sideCount}
 										sideValues={multiplierState.sideValues}
@@ -325,7 +326,7 @@ export default function BitCalculationPanel() {
 									direction={calculationResult.direction}
 									isSwapped={inputState?.isSwapped ?? false}
 									label={
-										isAccumulationMode
+										hasMultiplierSupport
 											? t("calculator.standard_result")
 											: undefined
 									}

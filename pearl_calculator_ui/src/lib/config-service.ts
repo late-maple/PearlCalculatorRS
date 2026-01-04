@@ -25,6 +25,7 @@ const LooseConfigSchema = z
 		SouthWestTNT: z.any().optional(),
 		SouthEastTNT: z.any().optional(),
 		VerticalTNT: z.any().optional(),
+		MaxVerticalTNT: z.any().optional(),
 		DefaultRedDirection: z.string().optional(),
 		DefaultRedTNTDirection: z.string().optional(),
 		DefaultBlueDirection: z.string().optional(),
@@ -103,6 +104,9 @@ function normalizeConfig(dirty: DirtyConfig): GeneralConfig {
 		default_blue_tnt_position: blueDir,
 		offset_x: Number(root.Offset?.X ?? 0),
 		offset_z: Number(root.Offset?.Z ?? 0),
+		max_vertical_tnt: root.MaxVerticalTNT
+			? Number(root.MaxVerticalTNT)
+			: undefined,
 		mode: root.Mode,
 	};
 

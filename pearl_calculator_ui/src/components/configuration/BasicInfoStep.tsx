@@ -24,6 +24,7 @@ export function BasicInfoStep({ errors, onForceNext }: BasicInfoStepProps) {
 		setCannonCenter,
 		pearlMomentum,
 		setPearlMomentum,
+		calculationMode,
 	} = useConfigurationState();
 	const { t } = useTranslation();
 
@@ -222,31 +223,62 @@ export function BasicInfoStep({ errors, onForceNext }: BasicInfoStepProps) {
 							</p>
 						</div>
 
-						<div className="flex flex-col space-y-1.5">
-							<Label>{t("configuration_page.max_tnt_label")}</Label>
-							<Input
-								type="number"
-								value={draftConfig.max_tnt}
-								onChange={(e) =>
-									setDraftConfig({ ...draftConfig, max_tnt: e.target.value })
-								}
-								onKeyDown={(e) => {
-									if (e.key === "Tab" && !e.shiftKey) {
-										e.preventDefault();
-										onForceNext?.();
+						{calculationMode === "Vector3D" ? (
+							<div className="flex flex-col space-y-1.5">
+								<Label>{t("configuration_page.max_vertical_tnt_label")}</Label>
+								<Input
+									type="number"
+									value={draftConfig.max_vertical_tnt}
+									onChange={(e) =>
+										setDraftConfig({
+											...draftConfig,
+											max_vertical_tnt: e.target.value,
+										})
 									}
-								}}
-								placeholder={errors.max_tnt}
-								className={cn(
-									"h-7 text-xs font-mono px-2 py-0 shadow-none",
-									errors.max_tnt &&
-										"border-destructive focus-visible:ring-destructive placeholder:text-destructive/60",
-								)}
-							/>
-							<p className="text-[0.8rem] text-muted-foreground">
-								{t("configuration_page.max_tnt_desc")}
-							</p>
-						</div>
+									onKeyDown={(e) => {
+										if (e.key === "Tab" && !e.shiftKey) {
+											e.preventDefault();
+											onForceNext?.();
+										}
+									}}
+									placeholder={errors.max_vertical_tnt}
+									className={cn(
+										"h-7 text-xs font-mono px-2 py-0 shadow-none",
+										errors.max_vertical_tnt &&
+											"border-destructive focus-visible:ring-destructive placeholder:text-destructive/60",
+									)}
+								/>
+								<p className="text-[0.8rem] text-muted-foreground">
+									{t("configuration_page.max_vertical_tnt_desc")}
+								</p>
+							</div>
+						) : (
+							<div className="flex flex-col space-y-1.5">
+								<Label>{t("configuration_page.max_tnt_label")}</Label>
+								<Input
+									type="number"
+									value={draftConfig.max_tnt}
+									onChange={(e) =>
+										setDraftConfig({ ...draftConfig, max_tnt: e.target.value })
+									}
+									onKeyDown={(e) => {
+										if (e.key === "Tab" && !e.shiftKey) {
+											e.preventDefault();
+											onForceNext?.();
+										}
+									}}
+									placeholder={errors.max_tnt}
+									className={cn(
+										"h-7 text-xs font-mono px-2 py-0 shadow-none",
+										errors.max_tnt &&
+											"border-destructive focus-visible:ring-destructive placeholder:text-destructive/60",
+									)}
+								/>
+								<p className="text-[0.8rem] text-muted-foreground">
+									{t("configuration_page.max_tnt_desc")}
+								</p>
+							</div>
+						)}
 					</div>
 				</CardContent>
 			</Card>

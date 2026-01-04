@@ -17,6 +17,7 @@ pub fn calculate_tnt_amount(input: CalculationInput) -> Result<Vec<TNTResultOutp
         &cannon,
         destination,
         input.max_tnt,
+        input.max_vertical_tnt,
         input.max_ticks,
         input.max_distance,
         version,

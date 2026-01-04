@@ -12,6 +12,7 @@ export interface DraftConfig {
 	south_west_tnt: { x: string; y: string; z: string };
 	south_east_tnt: { x: string; y: string; z: string };
 	vertical_tnt: { x: string; y: string; z: string };
+	max_vertical_tnt: string;
 	pearl_x_position: string;
 	pearl_y_motion: string;
 	pearl_y_position: string;
@@ -25,6 +26,7 @@ export const emptyDraftConfig: DraftConfig = {
 	south_west_tnt: { x: "", y: "", z: "" },
 	south_east_tnt: { x: "", y: "", z: "" },
 	vertical_tnt: { x: "", y: "", z: "" },
+	max_vertical_tnt: "",
 	pearl_x_position: "",
 	pearl_y_motion: "",
 	pearl_y_position: "",

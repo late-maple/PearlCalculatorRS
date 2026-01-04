@@ -9,6 +9,7 @@ pub fn calculate_tnt_amount(
     cannon: &Cannon,
     destination: Space3D,
     max_tnt: u32,
+    max_vertical_tnt: Option<u32>,
     max_ticks: u32,
     max_distance: f64,
     version: PearlVersion,
@@ -38,6 +39,7 @@ pub fn calculate_tnt_amount(
 
     let search_params = super::optimizer::SearchParams {
         max_tnt,
+        max_vertical_tnt,
         search_radius: 5,
         has_vertical: cannon.vertical_tnt.is_some(),
         cannon_mode: cannon.mode,

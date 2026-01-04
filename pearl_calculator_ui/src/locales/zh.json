@@ -207,7 +207,9 @@
 			"mode_vector3d_desc": "支持垂直 TNT 的 3D 矢量炮。",
 			"vertical_tnt_config_title": "垂直 TNT 配置",
 			"vertical_tnt_config_desc": "配置 3D 矢量炮的垂直 TNT 位置。",
-			"vertical_tnt": "垂直 TNT"
+			"vertical_tnt": "垂直 TNT",
+			"max_vertical_tnt_label": "垂直 TNT 上限",
+			"max_vertical_tnt_desc": "3D 计算中垂直 TNT 的最大数量。"
 		},
 		"error": {
 			"config": {

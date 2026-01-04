@@ -47,6 +47,7 @@ export const ERROR_MAPPINGS = [
 	["pearlMomentum.y", "momentum_y"],
 	["pearlMomentum.z", "momentum_z"],
 	["maxTNT", "max_tnt"],
+	["maxVerticalTNT", "max_vertical_tnt"],
 	["northWest.x", "north_west_tnt_x"],
 	["northWest.y", "north_west_tnt_y"],
 	["northWest.z", "north_west_tnt_z"],
@@ -104,8 +105,8 @@ export function useConfigurationController() {
 
 		const result: any = match(step)
 			.with(1, () => ({ success: true, error: null }))
-			.with(2, () =>
-				WizardBasicInfoSchema.safeParse({
+			.with(2, () => {
+				const baseData = {
 					cannonCenter,
 					pearlPosition: {
 						x: draftConfig.pearl_x_position,
@@ -117,9 +118,14 @@ export function useConfigurationController() {
 						y: draftConfig.pearl_y_motion,
 						z: pearlMomentum.z,
 					},
-					maxTNT: draftConfig.max_tnt,
-				}),
-			)
+					maxTNT: calculationMode === "Vector3D" ? "1" : draftConfig.max_tnt,
+					maxVerticalTNT:
+						calculationMode === "Vector3D"
+							? draftConfig.max_vertical_tnt
+							: undefined,
+				};
+				return WizardBasicInfoSchema.safeParse(baseData);
+			})
 			.with(3, () =>
 				WizardTNTConfigSchema.safeParse({
 					northWest: draftConfig.north_west_tnt,

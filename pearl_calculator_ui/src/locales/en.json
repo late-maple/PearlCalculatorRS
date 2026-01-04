@@ -207,7 +207,9 @@
 			"mode_vector3d_desc": "3D vector cannon with vertical TNT support.",
 			"vertical_tnt_config_title": "Vertical TNT Configuration",
 			"vertical_tnt_config_desc": "Configure the position of vertical TNT for 3D vector cannon.",
-			"vertical_tnt": "Vertical TNT"
+			"vertical_tnt": "Vertical TNT",
+			"max_vertical_tnt_label": "Max Vertical TNT",
+			"max_vertical_tnt_desc": "Maximum vertical TNT amount for 3D calculations."
 		},
 		"error": {
 			"config": {

@@ -3,6 +3,7 @@ use std::collections::HashMap;
 
 pub struct SearchParams {
     pub max_tnt: u32,
+    pub max_vertical_tnt: Option<u32>,
     pub search_radius: i32,
     pub has_vertical: bool,
     pub cannon_mode: CannonMode,
@@ -34,9 +35,16 @@ pub fn generate_candidates(
                     let max_single_side = r_u32.max(b_u32);
                     if params.max_tnt > 0
                         && params.cannon_mode != CannonMode::Accumulation
+                        && !params.has_vertical
                         && max_single_side > params.max_tnt
                     {
                         continue;
+                    }
+
+                    if let Some(max_v) = params.max_vertical_tnt {
+                        if v_u32 > max_v {
+                            continue;
+                        }
                     }
 
                     unique_candidates

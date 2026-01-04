@@ -26,6 +26,7 @@ export interface DraftConfig {
 	south_west_tnt: { x: string; y: string; z: string };
 	south_east_tnt: { x: string; y: string; z: string };
 	vertical_tnt: { x: string; y: string; z: string };
+	max_vertical_tnt: string;
 }
 
 export interface CannonCenter {
@@ -111,6 +112,10 @@ export function convertDraftToConfig(
 
 	if (mode === "Vector3D") {
 		baseConfig.vertical_tnt = getRelativeTNT(draftConfig.vertical_tnt, cx, cz);
+		const maxVerticalTnt = parseNumber(draftConfig.max_vertical_tnt);
+		if (maxVerticalTnt >= 0 && draftConfig.max_vertical_tnt !== "") {
+			baseConfig.max_vertical_tnt = maxVerticalTnt;
+		}
 		baseConfig.mode = mode;
 	}
 
@@ -164,6 +169,10 @@ export function buildExportConfig(
 				cx,
 				cz,
 			);
+			const maxVerticalTnt = parseNumber(draftConfig.max_vertical_tnt);
+			if (maxVerticalTnt >= 0 && draftConfig.max_vertical_tnt !== "") {
+				baseConfig.MaxVerticalTNT = maxVerticalTnt;
+			}
 		}
 		baseConfig.Mode = mode;
 	}
@@ -252,6 +261,7 @@ export function convertConfigToDraft(config: GeneralConfig): {
 					z: config.vertical_tnt.z.toString(),
 				}
 			: { x: "", y: "", z: "" },
+		max_vertical_tnt: config.max_vertical_tnt?.toString() ?? "",
 		pearl_x_position: config.pearl_x_position.toString(),
 		pearl_y_position: config.pearl_y_position.toString(),
 		pearl_z_position: config.pearl_z_position.toString(),

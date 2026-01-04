@@ -38,6 +38,7 @@ pub struct CalculationInput {
     pub version: String,
 
     pub vertical_tnt: Option<Space3DInput>,
+    pub max_vertical_tnt: Option<u32>,
     pub mode: Option<String>,
 }
 

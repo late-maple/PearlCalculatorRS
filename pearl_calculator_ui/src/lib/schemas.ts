@@ -92,6 +92,7 @@ export const GeneralConfigSchema = z.object({
 	offset_x: z.number().optional(),
 	offset_z: z.number().optional(),
 	vertical_tnt: Vector3Schema.optional(),
+	max_vertical_tnt: z.number().optional(),
 	mode: CannonModeSchema.optional(),
 });
 
@@ -180,6 +181,13 @@ export const WizardBasicInfoSchema = z.object({
 		const num = parseFloat(val);
 		return !isNaN(num) && num > 0;
 	}),
+	maxVerticalTNT: z
+		.string()
+		.refine((val) => {
+			const num = parseFloat(val);
+			return !isNaN(num) && num >= 0;
+		})
+		.optional(),
 });
 
 export const WizardTNTConfigSchema = z.object({
