@@ -34,6 +34,59 @@ interface MultiplierCalculationResult {
 	red: number[];
 }
 
+interface BitSectionCollapsibleProps {
+	label: string;
+	variant: "amber" | "violet";
+	open: boolean;
+	onOpenChange: (open: boolean) => void;
+	children: React.ReactNode;
+}
+
+function BitSectionCollapsible({
+	label,
+	variant,
+	open,
+	onOpenChange,
+	children,
+}: BitSectionCollapsibleProps) {
+	const triggerClass =
+		variant === "amber"
+			? "bg-amber-50 hover:bg-amber-100/80 border-amber-200"
+			: "bg-violet-50 hover:bg-violet-100/80 border-violet-200";
+
+	const textClass =
+		variant === "amber"
+			? "text-amber-600"
+			: "text-violet-500";
+
+	const iconClass =
+		variant === "amber"
+			? "text-amber-500"
+			: "text-violet-400";
+
+	return (
+		<Collapsible
+			open={open}
+			onOpenChange={onOpenChange}
+			className="space-y-2"
+		>
+			<CollapsibleTrigger
+				className={`group flex w-full items-center justify-center gap-2 py-1.5 px-3 rounded-lg border transition-colors ${triggerClass}`}
+			>
+				<span
+					className={`text-[11px] font-bold uppercase tracking-widest ${textClass}`}
+				>
+					{label}
+				</span>
+				<ChevronDown
+					className={`h-3.5 w-3.5 transition-transform duration-200 group-data-[state=open]:rotate-180 ${iconClass}`}
+				/>
+			</CollapsibleTrigger>
+			<CollapsibleContent>{children}</CollapsibleContent>
+		</Collapsible>
+	);
+}
+
 export default function BitCalculationPanel() {
 	const { t } = useTranslation();
 	const {
@@ -120,7 +173,16 @@ export default function BitCalculationPanel() {
 		return inputState.sideValues.some((v) => v && v.trim() !== "");
 	}, [inputState]);
 
+	const hasMultiplierValues = useMemo(() => {
+		if (!multiplierState) return false;
+		return multiplierState.sideValues.some((v) => v && v.trim() !== "");
+	}, [multiplierState]);
+
 	const [isConfigOpen, setIsConfigOpen] = useState(!hasTemplateValues);
+	const [isMultiplierOpen, setIsMultiplierOpen] = useState(
+		isMultiplierEnabled && !hasMultiplierValues,
+	);
+	const [isStandardOpen, setIsStandardOpen] = useState(!hasTemplateValues);
 	const hasAutoCalculated = useRef(false);
 
 	const { ref: scrollViewportRef, height: viewportHeight } =
@@ -263,36 +325,31 @@ export default function BitCalculationPanel() {
 									<div className="pt-2 space-y-4">
 										{hasMultiplierSupport && (
 											<>
-												<Collapsible defaultOpen className="space-y-2">
-													<CollapsibleTrigger className="group flex w-full items-center justify-center gap-2 py-1.5 px-3 bg-amber-50 hover:bg-amber-100/80 rounded-lg border border-amber-200 transition-colors">
-														<span className="text-[11px] font-bold text-amber-600 uppercase tracking-widest">
-															{t("calculator.multiplier_section")}
-														</span>
-														<ChevronDown className="h-3.5 w-3.5 text-amber-500 transition-transform duration-200 group-data-[state=open]:rotate-180" />
-													</CollapsibleTrigger>
-													<CollapsibleContent>
-														<MultiplierBitInputSection
-															value={multiplierState}
-															onChange={handleMultiplierChange}
-															enabled={isMultiplierEnabled}
-															onToggle={setIsMultiplierEnabled}
-														/>
-													</CollapsibleContent>
-												</Collapsible>
-												<Collapsible defaultOpen className="space-y-2">
-													<CollapsibleTrigger className="group flex w-full items-center justify-center gap-2 py-1.5 px-3 bg-violet-50 hover:bg-violet-100/80 rounded-lg border border-violet-200 transition-colors">
-														<span className="text-[11px] font-bold text-violet-500 uppercase tracking-widest">
-															{t("calculator.standard_section")}
-														</span>
-														<ChevronDown className="h-3.5 w-3.5 text-violet-400 transition-transform duration-200 group-data-[state=open]:rotate-180" />
-													</CollapsibleTrigger>
-													<CollapsibleContent>
-														<BitInputSection
-															value={inputState}
-															onChange={handleInputChange}
-														/>
-													</CollapsibleContent>
-												</Collapsible>
+												<BitSectionCollapsible
+													label={t("calculator.multiplier_section")}
+													variant="amber"
+													open={isMultiplierOpen}
+													onOpenChange={setIsMultiplierOpen}
+												>
+													<MultiplierBitInputSection
+														value={multiplierState}
+														onChange={handleMultiplierChange}
+														enabled={isMultiplierEnabled}
+														onToggle={setIsMultiplierEnabled}
+													/>
+												</BitSectionCollapsible>
+
+												<BitSectionCollapsible
+													label={t("calculator.standard_section")}
+													variant="violet"
+													open={isStandardOpen}
+													onOpenChange={setIsStandardOpen}
+												>
+													<BitInputSection
+														value={inputState}
+														onChange={handleInputChange}
+													/>
+												</BitSectionCollapsible>
 											</>
 										)}
 
