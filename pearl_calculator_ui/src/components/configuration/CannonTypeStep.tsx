@@ -13,13 +13,13 @@ import type { CannonMode } from "@/types/domain";
 interface ModeOption {
 	value: CannonMode;
 	titleKey:
-		| "configuration_page.mode_standard_title"
-		| "configuration_page.mode_accumulation_title"
-		| "configuration_page.mode_vector3d_title";
+	| "configuration_page.mode_standard_title"
+	| "configuration_page.mode_accumulation_title"
+	| "configuration_page.mode_vector3d_title";
 	descKey:
-		| "configuration_page.mode_standard_desc"
-		| "configuration_page.mode_accumulation_desc"
-		| "configuration_page.mode_vector3d_desc";
+	| "configuration_page.mode_standard_desc"
+	| "configuration_page.mode_accumulation_desc"
+	| "configuration_page.mode_vector3d_desc";
 }
 
 const CANNON_MODES: ModeOption[] = [
@@ -61,7 +61,7 @@ export function CannonTypeStep() {
 								type="button"
 								onClick={() => setWizardMode(mode.value)}
 								className={cn(
-									"w-full text-left p-4 rounded-lg border-2 transition-all duration-200",
+									"w-full text-left p-4 rounded-lg border-2 transition-all duration-100 active:scale-[0.98]",
 									"hover:border-primary/50 hover:bg-accent/50",
 									wizardMode === mode.value
 										? "border-primary bg-primary/5 shadow-sm"
