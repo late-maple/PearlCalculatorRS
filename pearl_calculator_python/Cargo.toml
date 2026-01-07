@@ -1,0 +1,16 @@
+[package]
+name = "pearl_calculator_python"
+version = "0.1.0"
+edition = "2021"
+description = "Python bindings for PearlCalculatorRS"
+authors = ["PearlCalculatorRS Contributors"]
+
+[lib]
+name = "pearl_calculator_python"
+crate-type = ["cdylib"]
+
+[dependencies]
+pearl_calculator_core = { path = "../pearl_calculator_core" }
+pearl_calculator_bridge = { path = "../pearl_calculator_bridge" }
+pyo3 = { version = "0.22", features = ["extension-module", "abi3-py38"] }
+serde_json = "1.0"
