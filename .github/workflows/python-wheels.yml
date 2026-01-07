@@ -44,6 +44,7 @@ jobs:
           CIBW_ARCHS_MACOS: x86_64 arm64
           CIBW_ARCHS_WINDOWS: AMD64
           CIBW_BUILD_FRONTEND: build
+          MACOSX_DEPLOYMENT_TARGET: "10.12"
 
       - name: Upload wheels
         uses: actions/upload-artifact@v4
